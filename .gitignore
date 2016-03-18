@@ -1,0 +1,19 @@
+# javascript
+node_modules
+dist
+build
+
+# docs
+giottoweb/docs/_build/
+
+.idea
+.project
+.pydevproject
+.grunt
+.coveralls.yml
+clean.py
+*.log
+*.pyc
+__pycache__
+.DS_Store
+coverage
