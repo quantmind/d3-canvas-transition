@@ -1,0 +1,18 @@
+language: node_js
+
+node_js:
+  - "node"
+
+install:
+  - npm install
+
+script:
+  - npm test
+
+notifications:
+  email: false
+
+branches:
+  only:
+    - master
+    - dev
