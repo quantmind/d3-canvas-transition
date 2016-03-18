@@ -13,6 +13,15 @@ test("Test module", (t) => {
 });
 
 
+test("Test resolution", (t) => {
+    t.equal(d3.resolution(), 2);
+    t.equal(d3.resolution(3), 3);
+    t.equal(d3.resolution(0), 2);
+    t.equal(d3.resolution(null), 2);
+    t.end();
+});
+
+
 test("Test selection", (t) => {
     var group = d3.select(getCanvas());
     t.equal(group.size(), 1);
