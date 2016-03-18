@@ -6,7 +6,7 @@ import * as d3 from '../';
 
 
 test("Test transition", (t) => {
-    var group = d3.select(getCanvas()),
+    var group = d3.selection(getCanvas()),
         paths = group.selectAll('path.line').data([[1, 2, 3]]),
         pen = line().x(identity).y(identity);
 

@@ -6,7 +6,8 @@ import * as d3 from '../';
 
 
 test("Test module", (t) => {
-    t.equal(typeof(d3.select), 'function');
+    t.equal(typeof(d3.version), 'string');
+    t.equal(typeof(d3.selection), 'function');
     t.equal(typeof(d3.resolution), 'function');
     t.equal(typeof(d3.tweenAttr), 'function');
     t.end();
@@ -23,7 +24,8 @@ test("Test resolution", (t) => {
 
 
 test("Test selection", (t) => {
-    var group = d3.select(getCanvas());
+    var group = d3.selection(getCanvas());
+    t.ok(group instanceof selection);
     t.equal(group.size(), 1);
     t.ok(group instanceof selection);
     t.equal(group._parents.length, 1);
@@ -33,7 +35,7 @@ test("Test selection", (t) => {
 
 
 test("Test root node", (t) => {
-    var group = d3.select(getCanvas());
+    var group = d3.selection(getCanvas());
     var node = group.node();
     t.equal(node.factor, 2);
     t.ok(node.context);
@@ -44,7 +46,7 @@ test("Test root node", (t) => {
 
 
 test("Test enter", (t) => {
-    var group = d3.select(getCanvas()),
+    var group = d3.selection(getCanvas()),
         paths = group.selectAll('path').data([1, 2, 3]),
         sy = symbol();
 
@@ -65,7 +67,7 @@ test("Test enter", (t) => {
 
 
 test("Test remove", (t) => {
-    var group = d3.select(getCanvas()),
+    var group = d3.selection(getCanvas()),
         paths = group.selectAll('path').data([1, 2, 3]);
 
     paths.enter()

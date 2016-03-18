@@ -7,7 +7,6 @@ class PathTransition {
         this.attr = attr;
         this.$value0 = {};
         this.$value1 = {};
-        this.interpolator = null;
     }
 
     update (node, attr, value) {
