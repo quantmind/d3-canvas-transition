@@ -24,7 +24,6 @@
     "dependencies": {
         "d3-collection": "0.1",
         "d3-transition": "0.2",
-        "d3-scale": "0.6",
         "d3-color": "0.4",
         "d3-timer": "0.4"
     },
@@ -41,6 +40,7 @@
         "tape": "4.5",
         "faucet": "0.0",
         "d3-shape": "0.6",
+        "d3-scale": "0.6",
         "jsdom": "8",
         "canvas": "1.3"
     },

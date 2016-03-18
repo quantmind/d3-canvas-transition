@@ -30,7 +30,7 @@ export class CanvasElement {
     querySelectorAll (selector) {
         var selections = [];
         if (this.childNodes) {
-            if (selector === '*') return this.children.slice();
+            if (selector === '*') return this.childNodes.slice();
             return select(selector, this.childNodes, selections);
         }
         return selections;

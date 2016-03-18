@@ -17,7 +17,9 @@ export default {
         'd3-collection': 'd3_collection',
         'd3-color': 'd3_color',
         'd3-interpolate': 'd3_interpolate',
+        'd3-scale': 'd3_scale',
         'd3-selection': 'd3_selection',
+        'd3-timer': 'd3_timer',
         'd3-transition': 'd3_transition'
     }
 };
