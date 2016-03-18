@@ -8,6 +8,8 @@ import * as d3 from '../';
 test("Test module", (t) => {
     t.equal(typeof(d3.version), 'string');
     t.equal(typeof(d3.selection), 'function');
+    t.equal(typeof(d3.select), 'function');
+    t.equal(typeof(d3.selectAll), 'function');
     t.equal(typeof(d3.resolution), 'function');
     t.equal(typeof(d3.tweenAttr), 'function');
     t.end();
@@ -39,7 +41,7 @@ test("Test root node", (t) => {
     var node = group.node();
     t.equal(node.factor, 2);
     t.ok(node.context);
-    t.equal(node.children().length, 0);
+    t.equal(node.childNodes.length, 0);
     t.equal(node.parentNode, undefined);
     t.end();
 });

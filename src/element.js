@@ -1,13 +1,22 @@
 import {map} from 'd3-collection';
 import {timeout} from 'd3-timer';
-import setAttribute from './transitions';
+import setAttribute from './path';
+import Deque from './deque';
 import * as d3 from 'd3-color';
 
 
 const
     namespace = 'canvas',
     tag_line = 'line',
-    tag_text = 'text';
+    tag_text = 'text',
+    defaultBaseline = 'middle',
+    textAlign = {
+        start: 'start',
+        middle: 'center',
+        end: 'end'
+    };
+
+export const fontProperties = ['style', 'variant', 'weight', 'size', 'family'];
 
 /**
  * A proxy for a data entry on canvas
@@ -22,24 +31,44 @@ export class CanvasElement {
         this.factor = factor || 1;
     }
 
-    children () {
-        if (!this.childNodes) this.childNodes = [];
-        return this.childNodes;
+    // API
+    get childNodes () {
+        return this._deque ? this._deque.list(): [];
+    }
+
+    get firstChild () {
+        return this._deque ? this._deque._head : null;
+    }
+
+    get lastChild () {
+        return this._deque ? this._deque._tail : null;
+    }
+
+    get parentNode () {
+        return this._parent;
+    }
+
+    get previousSibling () {
+        return this._prev;
+    }
+
+    get nextSibling () {
+        return this._next;
     }
 
     querySelectorAll (selector) {
         var selections = [];
-        if (this.childNodes) {
-            if (selector === '*') return this.childNodes.slice();
-            return select(selector, this.childNodes, selections);
+        if (this._deque) {
+            if (selector === '*') return this.childNodes;
+            return select(selector, this._deque, selections);
         }
         return selections;
     }
 
     querySelector (selector) {
-        if (this.childNodes) {
-            if (selector === '*') return this.childNodes[0];
-            return select(selector, this.childNodes);
+        if (this._deque) {
+            if (selector === '*') return this._deque._head;
+            return select(selector, this._deque);
         }
     }
 
@@ -49,54 +78,43 @@ export class CanvasElement {
         return elem;
     }
 
+    hasChildNodes () {
+        return this._deque ? this._deque.length > 0 : false;
+    }
+
     appendChild (child) {
         return this.insertBefore(child);
     }
 
     insertBefore (child, refChild) {
-        if (refChild) {
-            var children = this.children(),
-                index = children.indexOf(refChild);
-            if (index > -1)
-                children.splice(index, 0, child);
-            else
-                children.push(child)
-        } else
-            this.children().push(child);
-        child.parentNode = this;
+        if (child === this) throw Error('inserting self into children');
+        if (child._parent) child._parent.removeChild(child);
+        if (!this._deque) this._deque = new Deque();
+        this._deque.prepend(child, refChild);
+        child._parent = this;
+        touch(this.root, 1);
         return child;
     }
 
     removeChild (child) {
-        if (this.childNodes) {
-            var index = this.childNodes.indexOf(child);
-            if (index > -1) {
-                this.childNodes.splice(index, 1);
-                delete child.parentNode;
-                return child;
-            }
-        }
+        delete child._parent;
+        if (this._deque) return this._deque.remove(child);
     }
 
     setAttribute (attr, value) {
-        if (attr === 'draw') {
-            if (!this.parentNode)
-                timeout(redraw(this, value));
-        } else {
-            if (attr === 'class') this.class = value;
-            else {
-                if (!this.attrs) this.attrs = map();
-                setAttribute(this, attr, value);
-            }
+        if (attr === 'class') this.class = value;
+        else {
+            if (!this.attrs) this.attrs = map();
+            setAttribute(this, attr, value);
+            touch(this.root, 1);
         }
     }
 
     removeAttribute (attr) {
-        if (this.attrs) this.attrs.remove(attr);
-    }
-
-    removeProperty(name) {
-        this.removeAttribute(name);
+        if (this.attrs) {
+            this.attrs.remove(attr);
+            touch(this.root, 1);
+        }
     }
 
     getAttribute (attr) {
@@ -107,10 +125,21 @@ export class CanvasElement {
         return namespace;
     }
 
+    // Canvas methods
+    get countNodes () {
+        return this._deque ? this._deque._length : 0;
+    }
+
+    get root () {
+        if (this._parent) return this._parent.root;
+        return this;
+    }
+
     draw (t) {
         var ctx = this.context,
             attrs = this.attrs;
-        if (!this.parentNode) return;
+        if (!this._parent) return;
+        var root = this.root;
 
         if (attrs) {
             ctx.save();
@@ -122,6 +151,7 @@ export class CanvasElement {
             fillStyle(this);
             strokeStyle(this);
             ctx.restore();
+            root._draws += 1;
         }
 
         if (this.childNodes)
@@ -132,13 +162,22 @@ export class CanvasElement {
         if (attrs) ctx.restore();
     }
 
+    each (f) {
+        if (!this._list) return;
+        this._list.each(f);
+    }
+
     getValue (attr) {
         var value = this.getAttribute(attr);
-        if (value === undefined && this.parentNode) return this.parentNode.getValue(attr);
+        if (value === undefined && this._parent) return this._parent.getValue(attr);
         return value;
     }
 
     // Additional attribute functions
+    removeProperty(name) {
+        this.removeAttribute(name);
+    }
+
     setProperty(name, value) {
         this.setAttribute(name, value);
     }
@@ -178,7 +217,7 @@ export class CanvasElement {
 }
 
 
-function select(selector, children, selections) {
+function select(selector, deque, selections) {
 
     var selectors = selector.split(' ');
 
@@ -186,36 +225,22 @@ function select(selector, children, selections) {
         selector = selectors[s];
         var bits = selector.split('.'),
             tag = bits[0],
-            classes = bits.splice(1).join(' ');
+            classes = bits.splice(1).join(' '),
+            child = deque._head;
 
-        for (let i = 0; i < children.length; ++i)
-            if (!tag || children[i].tag === tag) {
-                if (classes && children[i].class !== classes)
+        while (child) {
+            if (!tag || child.tag === tag) {
+                if (classes && child.class !== classes)
                     continue;
                 if (selections)
-                    selections.push(children[i]);
+                    selections.push(child);
                 else
-                    return children[i];
+                    return child;
             }
+        }
     }
 
     return selections;
-}
-
-
-function redraw (node, t) {
-
-    return function () {
-        var ctx = node.context;
-        ctx.beginPath();
-        ctx.closePath();
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        transform(node, node.getAttribute('transform'));
-        node.children().forEach((child) => {
-            child.draw(t);
-        });
-    };
 }
 
 
@@ -266,14 +291,76 @@ function drawLine(node, attrs) {
     node.context.lineTo(node.factor*attrs.get('x2'), node.factor*attrs.get('y2'));
 }
 
-function drawText() {
-
+function drawText(node, attrs) {
+    var size = fontString(node);
+    node.context.textAlign = textAlign[node.getValue('text-anchor')] || textAlign.middle;
+    node.context.textBaseline = node.getValue('text-baseline') || defaultBaseline;
+    node.context.fillText(node.textContent || '', fontLocation(attrs, 'x', size), fontLocation(attrs, 'y', size));
 }
 
 
-function path(node, path, t) {
+function path(node, path) {
     if (path) {
-        if (typeof(path.draw) === 'function') path.draw(node, t);
-        else path.context(node.context)();
+        if (typeof(path.draw) === 'function') path.draw(node);
+        else if (path.context) path.context(node.context)();
     }
+}
+
+
+function fontString (node) {
+    let bits = [],
+        size = 0,
+        key, v;
+    for (let i=0; i<fontProperties.length; ++i) {
+        key = fontProperties[i];
+        v = node.getValue('font-' + key);
+        if (v) {
+            if (key === 'size') {
+                size = v;
+                v += 'px';
+            }
+            bits.push(v);
+        }
+    }
+    if (size)
+        node.context.font = bits.join(' ');
+    return size;
+}
+
+
+function fontLocation (attrs, d, size) {
+    var p = attrs.get(d) || 0,
+        dp = attrs.get('d' + d) || 0;
+    if (dp) {
+        if (dp.substring(dp.length - 2) == 'em') dp = size * dp.substring(0, dp.length - 2);
+        else if (dp.substring(dp.length - 2) == 'px') dp = +dp.substring(0, dp.length - 2);
+    }
+    return p + dp;
+}
+
+
+function touch(node, v) {
+    if (!node._touches) node._touches = 0;
+    node._touches += v;
+    if (!node._touches || node._inloop) return;
+    node._inloop = timeout(redraw(node));
+}
+
+
+function redraw (node) {
+
+    return function () {
+        var ctx = node.context;
+        node._touches = 0;
+        ctx.beginPath();
+        ctx.closePath();
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        transform(node, node.getAttribute('transform'));
+        node.each((child) => {
+            child.draw();
+        });
+        node._inloop = false;
+        touch(node, 0);
+    };
 }

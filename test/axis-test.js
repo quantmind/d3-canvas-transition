@@ -5,6 +5,7 @@ import {getCanvas} from './utils';
 import * as d3 from '../';
 
 
+
 test("Test axis", (t) => {
 
     var context = getCanvas(),
