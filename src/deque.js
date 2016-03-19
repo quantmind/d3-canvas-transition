@@ -49,6 +49,9 @@ class Deque {
         if (this._tail === child)
             this._tail = child._prev;
 
+        delete child._prev;
+        delete child._next;
+
         this._length--;
     }
 

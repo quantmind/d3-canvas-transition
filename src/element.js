@@ -21,6 +21,9 @@ export const fontProperties = ['style', 'variant', 'weight', 'size', 'family'];
 /**
  * A proxy for a data entry on canvas
  *
+ * It partially implements the Node Api
+ * https://developer.mozilla.org/en-US/docs/Web/API/Node
+ *
  * It allow the use the d3-select and d3-transition libraries
  * on canvas joins
  */
@@ -57,12 +60,11 @@ export class CanvasElement {
     }
 
     querySelectorAll (selector) {
-        var selections = [];
         if (this._deque) {
             if (selector === '*') return this.childNodes;
-            return select(selector, this._deque, selections);
-        }
-        return selections;
+            return select(selector, this._deque, []);
+        } else
+            return [];
     }
 
     querySelector (selector) {
@@ -82,6 +84,14 @@ export class CanvasElement {
         return this._deque ? this._deque.length > 0 : false;
     }
 
+    contains (child) {
+        while(child) {
+            if(child._parent == this) return true;
+            child = child._parent;
+        }
+        return false;
+    }
+
     appendChild (child) {
         return this.insertBefore(child);
     }
@@ -97,8 +107,11 @@ export class CanvasElement {
     }
 
     removeChild (child) {
-        delete child._parent;
-        if (this._deque) return this._deque.remove(child);
+        if (child._parent === this) {
+            delete child._parent;
+            this._deque.remove(child);
+            return child;
+        }
     }
 
     setAttribute (attr, value) {
@@ -230,13 +243,15 @@ function select(selector, deque, selections) {
 
         while (child) {
             if (!tag || child.tag === tag) {
-                if (classes && child.class !== classes)
-                    continue;
-                if (selections)
+                if (classes && child.class !== classes) {
+                    // nothing to do
+                }
+                else if (selections)
                     selections.push(child);
                 else
                     return child;
             }
+            child = child._next;
         }
     }
 

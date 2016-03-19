@@ -12,6 +12,7 @@ test("Test module", (t) => {
     t.equal(typeof(d3.selectAll), 'function');
     t.equal(typeof(d3.resolution), 'function');
     t.equal(typeof(d3.tweenAttr), 'function');
+    t.equal(typeof(d3.fontProperties), 'object');
     t.end();
 });
 
@@ -53,14 +54,11 @@ test("Test enter", (t) => {
         sy = symbol();
 
     paths.enter()
-        .append('path')
+            .append('path')
         .merge(paths)
-        .attr('x', function (d) {return d})
-        .attr('y', function (d) {return d})
-        .attr('d', sy);
-
-    paths.exit()
-        .remove();
+            .attr('x', function (d) {return d})
+            .attr('y', function (d) {return d})
+            .attr('d', sy);
 
     paths = group.selectAll('path');
     t.equal(paths.size(), 3);
