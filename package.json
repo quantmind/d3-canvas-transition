@@ -2,7 +2,7 @@
     "version": "0.1.0",
     "name": "d3-canvas-transition",
     "title": "d3-canvas-transition",
-    "description": "Animated transitions for D3 selections on canvas",
+    "description": "Animated transitions for D3 selections on svg and canvas",
     "homepage": "https://github.com/quantmind/d3-canvas-transition",
     "repository": {
         "type": "git",
@@ -10,22 +10,20 @@
     },
     "keywords": [
         "d3",
+        "svg",
         "canvas",
         "transition",
         "animation"
     ],
     "license": "BSD-3-Clause",
     "author": {
-        "name": "quantmind.com",
-        "email": "message@quantmind.com"
+        "name": "Luca Sbardella",
+        "email": "luca@quantmind.com"
     },
     "main": "build/d3-canvas-transition.js",
     "jsnext:main": "index",
     "dependencies": {
-        "d3-collection": "0.1",
-        "d3-transition": "0.2",
-        "d3-color": "0.4",
-        "d3-timer": "0.4"
+        "d3-transition": "0.2"
     },
     "devDependencies": {
         "rollup": "0.25",

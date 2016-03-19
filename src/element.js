@@ -152,14 +152,13 @@ export class CanvasElement {
         var ctx = this.context,
             attrs = this.attrs;
         if (!this._parent) return;
-        var root = this.root;
 
         if (attrs) {
             ctx.save();
             transform(this, this.attrs.get('transform'));
             ctx.save();
-            if (this.tag === tag_line) drawLine(this, attrs);
-            else if (this.tag === tag_text) drawText(this, attrs);
+            if (this.tag === tag_line) drawLine(this);
+            else if (this.tag === tag_text) drawText(this);
             else path(this, attrs.get('d'), t);
             fillStyle(this);
             strokeStyle(this);
@@ -299,12 +298,13 @@ function transform(node, trans) {
 }
 
 
-function drawLine(node, attrs) {
+function drawLine(node) {
+    var attrs = node.attrs;
     node.context.moveTo(node.factor*(attrs.get('x1') || 0), node.factor*(attrs.get('y1') || 0));
     node.context.lineTo(node.factor*attrs.get('x2'), node.factor*attrs.get('y2'));
 }
 
-function drawText(node, attrs) {
+function drawText(node) {
     var size = fontString(node);
     node.context.textAlign = textAlign[node.getValue('text-anchor')] || textAlign.middle;
     node.context.textBaseline = node.getValue('text-baseline') || defaultBaseline;

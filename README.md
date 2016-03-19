@@ -6,7 +6,8 @@
 
 **PRE ALPHA - DONT USE IT**
 
-This is a [d3 plugin](https://bost.ocks.org/mike/d3-plugin/) for drawing on canvas with d3 and use d3 built in transition.
+This is a [d3 plugin](https://bost.ocks.org/mike/d3-plugin/) for drawing on
+svg and canvas using the same [d3-transition](https://github.com/d3/d3-transition) API.
 
 ## Installing
 
