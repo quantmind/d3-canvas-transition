@@ -22,8 +22,8 @@ const originalAttr = selection.prototype.attr;
 
 function selectAttr (name, value) {
     if (arguments.length > 1) {
-        var node = this.node();
-        if (node instanceof CanvasElement && pen.test(name, value))
+        var ref = this._parents[0] || this.node();
+        if (ref instanceof CanvasElement && pen.test(name, value))
             arguments[1] = pen(value, 1);
     }
     return originalAttr.apply(this, arguments);
