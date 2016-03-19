@@ -164,7 +164,6 @@ export class CanvasElement {
             fillStyle(this);
             strokeStyle(this);
             ctx.restore();
-            root._draws += 1;
         }
 
         if (this.childNodes)
@@ -309,7 +308,7 @@ function drawText(node, attrs) {
     var size = fontString(node);
     node.context.textAlign = textAlign[node.getValue('text-anchor')] || textAlign.middle;
     node.context.textBaseline = node.getValue('text-baseline') || defaultBaseline;
-    node.context.fillText(node.textContent || '', fontLocation(attrs, 'x', size), fontLocation(attrs, 'y', size));
+    node.context.fillText(node.textContent || '', fontLocation(node, 'x', size), fontLocation(node, 'y', size));
 }
 
 
@@ -330,8 +329,8 @@ function fontString (node) {
         v = node.getValue('font-' + key);
         if (v) {
             if (key === 'size') {
-                size = v;
-                v += 'px';
+                size = node.factor*v;
+                v = size + 'px';
             }
             bits.push(v);
         }
@@ -342,14 +341,14 @@ function fontString (node) {
 }
 
 
-function fontLocation (attrs, d, size) {
-    var p = attrs.get(d) || 0,
-        dp = attrs.get('d' + d) || 0;
+function fontLocation (node, d, size) {
+    var p = node.attrs.get(d) || 0,
+        dp = node.attrs.get('d' + d) || 0;
     if (dp) {
         if (dp.substring(dp.length - 2) == 'em') dp = size * dp.substring(0, dp.length - 2);
         else if (dp.substring(dp.length - 2) == 'px') dp = +dp.substring(0, dp.length - 2);
     }
-    return p + dp;
+    return node.factor*(p + dp);
 }
 
 

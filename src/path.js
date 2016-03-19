@@ -2,7 +2,8 @@
 
 class PathTransition {
 
-    constructor () {
+    constructor (factor) {
+        this.factor = factor || 1;
         this.time = 1;
     }
 
@@ -26,10 +27,11 @@ class PathTransition {
     }
 
     accessor (f) {
-        var data = this.data0,
+        var factor = this.factor,
+            data = this.data0,
             time = this.time;
         return function (d, i) {
-            return time * f(d) + (1 - time) * f(data[i]);
+            return factor*(time * f(d) + (1 - time) * f(data[i]));
         };
     }
 }
@@ -40,7 +42,7 @@ export default function (node, attr, value) {
         var transition = node.attrs.get(attr);
 
         if (!transition) {
-            transition = new PathTransition(attr);
+            transition = new PathTransition(node.factor);
             node.attrs.set(attr, transition);
         }
 
