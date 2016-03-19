@@ -176,8 +176,7 @@ export class CanvasElement {
     }
 
     each (f) {
-        if (!this._list) return;
-        this._list.each(f);
+        if (this._deque) this._deque.each(f);
     }
 
     getValue (attr) {

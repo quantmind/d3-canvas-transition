@@ -126,5 +126,12 @@ test("Test many elements", (t) => {
     t.equal(children[0].nextSibling, children[1]);
     t.equal(children[0].textContent, 'c');
     t.equal(node.firstChild, children[0]);
+
+    //
+    let children2 = [];
+    node.each((child) => {
+        children2.push(child);
+    });
+    t.deepEqual(children2, children);
     t.end();
 });
