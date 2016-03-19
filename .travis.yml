@@ -5,6 +5,8 @@ node_js:
 
 addons:
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
     packages:
       - libcairo2-dev
       - libjpeg8-dev
@@ -16,7 +18,7 @@ env:
 
 before_install:
   - npm explore npm -g -- npm install node-gyp@latest
-  
+
 install:
   - npm install
 
