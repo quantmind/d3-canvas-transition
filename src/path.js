@@ -1,55 +1,69 @@
+// import {active} from 'd3-transition';
 
 
 class PathTransition {
 
     constructor (factor) {
         this.factor = factor || 1;
-        this.time = 1;
+        this.time = Infinity;
+        this.data1 = [];
     }
 
     update (value) {
-        if (this.time === 1) {
-            this.pen = value.pen;
-            this.data0 = this.data1 || value.data;
-            this.data1 = value.data;
-            this.x = this.pen.x();
-            this.y = this.pen.y();
+        if (value.time < this.time) {
+            var data1 = this.data1;
+            while (data1.length < value.data.length) data1.push(new Array(2));
+            this.data0 = this.data1;
+            this.x = value.pen.x();
+            this.y = value.pen.y();
         }
+        this.pen = value.pen;
         this.time = value.time;
         this.current = value.data;
     }
 
     draw (node) {
+        node.context.beginPath();
         this.pen
             .context(node.context)
-            .x(this.accessor(this.x))
-            .y(this.accessor(this.y))(this.current);
+            .x(this.accessor(this.x, 0))
+            .y(this.accessor(this.y, 1))(this.current);
     }
 
-    accessor (f) {
+    accessor (f, j) {
         var factor = this.factor,
-            data = this.data0,
-            time = this.time;
+            data0 = this.data0,
+            data1 = this.data1,
+            time = this.time,
+            prev, curr;
         return function (d, i) {
-            return factor*(time * f(d) + (1 - time) * f(data[i]));
+            prev = data0[i][j];
+            if (prev === undefined) curr = factor*f(d);
+            else curr = factor*(time * f(d) + (1 - time) * prev);
+            data1[i][j] = curr;
+            return curr;
         };
     }
 }
 
 
 export default function (node, attr, value) {
+    var current = node.attrs.get(attr);
+    if (current === value) return false;
     if (attr === 'd' && value && value.pen && typeof(value.pen.x) === 'function') {
-        var transition = node.attrs.get(attr);
 
-        if (!transition) {
-            transition = new PathTransition(node.factor);
-            node.attrs.set(attr, transition);
+        if (!current) {
+            current = new PathTransition(node.factor);
+            node.attrs.set(attr, current);
         }
 
-        transition.update(value);
+        current.update(value);
+        return true;
     }
-    else
-        node.attrs.set(attr, value)
+    else {
+        node.attrs.set(attr, value);
+        return true;
+    }
 }
 
 

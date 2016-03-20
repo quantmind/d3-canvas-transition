@@ -98,6 +98,8 @@ export class CanvasElement {
 
     insertBefore (child, refChild) {
         if (child === this) throw Error('inserting self into children');
+        if (!(child instanceof CanvasElement))
+            throw Error('Cannot insert a non canvas element into a canvas element');
         if (child._parent) child._parent.removeChild(child);
         if (!this._deque) this._deque = new Deque();
         this._deque.prepend(child, refChild);
@@ -110,6 +112,7 @@ export class CanvasElement {
         if (child._parent === this) {
             delete child._parent;
             this._deque.remove(child);
+            touch(this.root, 1);
             return child;
         }
     }
@@ -118,8 +121,7 @@ export class CanvasElement {
         if (attr === 'class') this.class = value;
         else {
             if (!this.attrs) this.attrs = map();
-            setAttribute(this, attr, value);
-            touch(this.root, 1);
+            if (setAttribute(this, attr, value)) touch(this.root, 1);
         }
     }
 

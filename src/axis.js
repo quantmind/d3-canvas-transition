@@ -34,8 +34,7 @@ function axis(orient, scale) {
         tickFormat = null,
         tickSizeInner = 6,
         tickSizeOuter = 6,
-        tickPadding = 3,
-        context = null;
+        tickPadding = 3;
 
     function axis(context) {
         var values = tickValues == null ? (scale.ticks ? scale.ticks.apply(scale, tickArguments) : scale.domain()) : tickValues,
@@ -136,10 +135,6 @@ function axis(orient, scale) {
 
     axis.tickPadding = function(_) {
         return arguments.length ? (tickPadding = +_, axis) : tickPadding;
-    };
-
-    axis.context = function(_) {
-        return arguments.length ? (context = _ == null ? null : _, axis) : context;
     };
 
     return axis;
