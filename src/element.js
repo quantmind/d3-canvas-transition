@@ -118,7 +118,12 @@ export class CanvasElement {
     }
 
     setAttribute (attr, value) {
-        if (attr === 'class') this.class = value;
+        if (attr === 'class') {
+            this.class = value;
+        }
+        else if (attr === 'id') {
+            this.id = value;
+        }
         else {
             if (!this.attrs) this.attrs = map();
             if (setAttribute(this, attr, value)) touch(this.root, 1);
@@ -153,7 +158,6 @@ export class CanvasElement {
     draw (t) {
         var ctx = this.context,
             attrs = this.attrs;
-        if (!this._parent) return;
 
         if (attrs) {
             ctx.save();
@@ -167,8 +171,8 @@ export class CanvasElement {
             ctx.restore();
         }
 
-        if (this.childNodes)
-            this.childNodes.forEach((child) => {
+        if (this._deque)
+            this._deque.each((child) => {
                 child.draw(t);
             });
 
@@ -297,6 +301,7 @@ function transform(node, trans) {
         bits = s.substring(0, index2).split(',');
         node.context.translate(node.factor*bits[0], node.factor*bits[1]);
     }
+    return true;
 }
 
 
@@ -371,10 +376,7 @@ function redraw (node) {
         ctx.closePath();
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        transform(node, node.getAttribute('transform'));
-        node.each((child) => {
-            child.draw();
-        });
+        node.draw();
         node._inloop = false;
         touch(node, 0);
     };

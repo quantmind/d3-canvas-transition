@@ -56,8 +56,8 @@ test("Test enter", (t) => {
     paths.enter()
             .append('path')
         .merge(paths)
-            .attr('x', function (d) {return d})
-            .attr('y', function (d) {return d})
+            .attr('x', function (d) {return d;})
+            .attr('y', function (d) {return d;})
             .attr('d', sy);
 
     paths = group.selectAll('path');
@@ -72,8 +72,8 @@ test("Test remove", (t) => {
 
     paths.enter()
         .append('path')
-        .attr('x', function (d) {return d})
-        .attr('y', function (d) {return d});
+        .attr('x', function (d) {return d;})
+        .attr('y', function (d) {return d;});
 
     paths = group.selectAll('path').data([1, 2]);
 

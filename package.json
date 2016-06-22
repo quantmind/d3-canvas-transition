@@ -1,54 +1,59 @@
 {
-    "version": "0.1.0",
-    "name": "d3-canvas-transition",
-    "title": "d3-canvas-transition",
-    "description": "Animated transitions for D3 selections on svg and canvas",
-    "homepage": "https://github.com/quantmind/d3-canvas-transition",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/quantmind/d3-canvas-transition.git"
-    },
-    "keywords": [
-        "d3",
-        "svg",
-        "canvas",
-        "transition",
-        "animation"
-    ],
-    "license": "BSD-3-Clause",
-    "author": {
-        "name": "Luca Sbardella",
-        "email": "luca@quantmind.com"
-    },
-    "main": "build/d3-canvas-transition.js",
-    "jsnext:main": "index",
-    "dependencies": {
-        "d3-transition": "0.2"
-    },
-    "devDependencies": {
-        "rollup": "0.25",
-        "rollup-plugin-json": "2.0",
-        "rollup-plugin-babel": "2.4",
-        "babel-preset-es2015-rollup": "1.1",
-        "uglify-js": "2.6",
-        "eslint": "2.4",
-        "browserify": "13.0",
-        "babelify": "7.2",
-        "babel-tape-runner": "2.0",
-        "tape": "4.5",
-        "faucet": "0.0",
-        "d3-shape": "0.6",
-        "d3-scale": "0.6",
-        "jsdom": "8",
-        "canvas": "1.3"
-    },
-    "scripts": {
-        "pretest": "rollup -c",
-        "test": "eslint index.js src test && babel-tape-runner `find test -name '*-test.js'` | faucet",
-        "prepublish": "npm run test && uglifyjs build/d3-canvas-transition.js -c -m -o build/d3-canvas-transition.min.js && rm -f build/d3-canvas-transition.zip && zip -j build/d3-canvas-transition.zip -- LICENSE README.md build/d3-canvas-transition.js build/d3-canvas-transition.min.js",
-        "postpublish": "VERSION=`node -e 'console.log(require(\"./package.json\").version)'`; git push && git tag -am \"Release $VERSION.\" v${VERSION} && git push --tags"
-    },
-    "babel": {
-        "presets": ["es2015"]
-    }
+  "version": "0.1.0",
+  "name": "d3-canvas-transition",
+  "title": "d3-canvas-transition",
+  "description": "Animated transitions for D3 selections on svg and canvas",
+  "homepage": "https://github.com/quantmind/d3-canvas-transition",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/quantmind/d3-canvas-transition.git"
+  },
+  "keywords": [
+    "d3",
+    "svg",
+    "canvas",
+    "transition",
+    "animation"
+  ],
+  "license": "BSD-3-Clause",
+  "author": "Luca Sbardella <luca@quantmind.com>",
+  "main": "build/d3-canvas-transition.js",
+  "jsnext:main": "index",
+  "dependencies": {
+    "d3-transition": "0.3"
+  },
+  "devDependencies": {
+    "babel-preset-es2015-rollup": "1.1",
+    "babelify": "7.3",
+    "babel-tape-runner": "2.0",
+    "browserify": "13.0",
+    "canvas": "1.4",
+    "d3-shape": "0.7",
+    "d3-scale": "0.9",
+    "eslint": "2.13",
+    "faucet": "0.0",
+    "jsdom": "8",
+    "rollup": "0.32",
+    "rollup-plugin-json": "2.0",
+    "rollup-plugin-babel": "2.5",
+    "tape": "4.6",
+    "uglify-js": "2.6"
+  },
+  "scripts": {
+    "pretest": "rollup -c",
+    "test": "eslint index.js src test && babel-tape-runner `find test -name '*-test.js'` | faucet",
+    "prepublish": "npm run test && uglifyjs build/d3-canvas-transition.js -c -m -o build/d3-canvas-transition.min.js && rm -f build/d3-canvas-transition.zip && zip -j build/d3-canvas-transition.zip -- LICENSE README.md build/d3-canvas-transition.js build/d3-canvas-transition.min.js",
+    "postpublish": "VERSION=`node -e 'console.log(require(\"./package.json\").version)'`; git push && git tag -am \"Release $VERSION.\" v${VERSION} && git push --tags"
+  },
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  },
+  "bugs": {
+    "url": "https://github.com/quantmind/d3-canvas-transition/issues"
+  },
+  "directories": {
+    "test": "test"
+  }
 }

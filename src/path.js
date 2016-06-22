@@ -1,8 +1,7 @@
 // import {active} from 'd3-transition';
 
 
-class PathTransition {
-
+class SymbolTransition {
     constructor (factor) {
         this.factor = factor || 1;
         this.time = Infinity;
@@ -10,13 +9,6 @@ class PathTransition {
     }
 
     update (value) {
-        if (value.time < this.time) {
-            var data1 = this.data1;
-            while (data1.length < value.data.length) data1.push(new Array(2));
-            this.data0 = this.data1;
-            this.x = value.pen.x();
-            this.y = value.pen.y();
-        }
         this.pen = value.pen;
         this.time = value.time;
         this.current = value.data;
@@ -25,9 +17,7 @@ class PathTransition {
     draw (node) {
         node.context.beginPath();
         this.pen
-            .context(node.context)
-            .x(this.accessor(this.x, 0))
-            .y(this.accessor(this.y, 1))(this.current);
+            .context(node.context)();
     }
 
     accessor (f, j) {
@@ -44,16 +34,48 @@ class PathTransition {
             return curr;
         };
     }
+
 }
+class PathTransition extends SymbolTransition {
+
+    update (value) {
+        if (value.time < this.time) {
+            var data1 = this.data1;
+            while (data1.length < value.data.length) data1.push(new Array(2));
+            this.data0 = this.data1;
+            this.x = value.pen.x();
+            this.y = value.pen.y();
+        }
+        super.update(value);
+    }
+
+    draw (node) {
+        node.context.beginPath();
+        this.pen
+            .context(node.context)
+            .x(this.accessor(this.x, 0))
+            .y(this.accessor(this.y, 1))(this.current);
+    }
+}
+
+var shapeTransitions = {
+    symbol: SymbolTransition,
+    line: PathTransition,
+    arc: PathTransition,
+    area: PathTransition
+};
+
 
 
 export default function (node, attr, value) {
     var current = node.attrs.get(attr);
     if (current === value) return false;
-    if (attr === 'd' && value && value.pen && typeof(value.pen.x) === 'function') {
+
+    if (attr === 'd' && value && value.pen) {
 
         if (!current) {
-            current = new PathTransition(node.factor);
+            var Constructor = shapeTransitions[value.pen.name];
+            current = new Constructor(node.factor);
             node.attrs.set(attr, current);
         }
 
@@ -73,7 +95,7 @@ export function pen (p, t, d, i) {
         time: t,
         data: d,
         index: i || 0
-    }
+    };
 }
 
 
