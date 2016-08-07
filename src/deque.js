@@ -1,6 +1,6 @@
 
 
-class Deque {
+export default class {
 
     constructor () {
         this._head = null;
@@ -73,6 +73,3 @@ class Deque {
         }
     }
 }
-
-
-export default Deque;

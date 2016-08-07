@@ -6,7 +6,7 @@ import * as d3 from '../';
 
 
 
-test("Test axis", (t) => {
+test('Test axis', (t) => {
 
     var context = getCanvas(),
         group = d3.selection(context),

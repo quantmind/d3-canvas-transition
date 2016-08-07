@@ -3,7 +3,7 @@ import {getCanvas} from './utils';
 import * as d3 from '../';
 
 
-test("Test empty element", (t) => {
+test('Test empty element', (t) => {
     var node = new d3.CanvasElement(getCanvas());
     t.notOk(node.hasChildNodes());
     t.notOk(node.previousSibling);
@@ -15,7 +15,7 @@ test("Test empty element", (t) => {
 });
 
 
-test("Test append element", (t) => {
+test('Test append element', (t) => {
     var node = new d3.CanvasElement(getCanvas()),
         child = node.createElementNS(null, 'p');
     node.appendChild(child);
@@ -36,7 +36,7 @@ test("Test append element", (t) => {
 });
 
 
-test("Test prepend element", (t) => {
+test('Test prepend element', (t) => {
     var node = new d3.CanvasElement(getCanvas()),
         child = node.createElementNS(null, 'p');
     node.insertBefore(child);
@@ -67,7 +67,7 @@ test("Test prepend element", (t) => {
 });
 
 
-test("Test many elements", (t) => {
+test('Test many elements', (t) => {
     var canvas = new d3.selection(getCanvas()),
         node = canvas.node(),
         text = canvas.selectAll('text.test').data(['a', 'b', 'c', 'd', 'f', 'g']);

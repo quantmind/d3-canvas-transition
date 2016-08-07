@@ -12,12 +12,12 @@ const top = 1,
 
 function translateX(scale0, scale1, d) {
     var x = scale0(d);
-    return "translate(" + (isFinite(x) ? x : scale1(d)) + ",0)";
+    return 'translate(' + (isFinite(x) ? x : scale1(d)) + ',0)';
 }
 
 function translateY(scale0, scale1, d) {
     var y = scale0(d);
-    return "translate(0," + (isFinite(y) ? y : scale1(d)) + ")";
+    return 'translate(0,' + (isFinite(y) ? y : scale1(d)) + ')';
 }
 
 function center(scale) {
@@ -46,54 +46,54 @@ function axis(orient, scale) {
             range1 = range[range.length - 1],
             position = (scale.bandwidth ? center : identity)(scale.copy()),
             selection = context.selection ? context.selection() : context,
-            path = selection.selectAll(".domain").data([null]),
-            tick = selection.selectAll(".tick").data(values, scale).order(),
+            path = selection.selectAll('.domain').data([null]),
+            tick = selection.selectAll('.tick').data(values, scale).order(),
             tickExit = tick.exit(),
-            tickEnter = tick.enter().append("g", ".domain").attr("class", "tick"),
-            line = tick.select("line"),
-            text = tick.select("text");
+            tickEnter = tick.enter().append('g', '.domain').attr('class', 'tick'),
+            line = tick.select('line'),
+            text = tick.select('text');
 
-        path = path.merge(path.enter().append("line").attr("class", "domain"));
+        path = path.merge(path.enter().append('line').attr('class', 'domain'));
         tick = tick.merge(tickEnter);
-        line = line.merge(tickEnter.append("line"));
-        text = text.merge(tickEnter.append("text"));
+        line = line.merge(tickEnter.append('line'));
+        text = text.merge(tickEnter.append('text'));
 
         if (context !== selection) {
             path = path.transition(context);
             tick = tick.transition(context);
-            tickExit = tickExit.transition(context).style("opacity", epsilon).attr("transform", function(d) { return transform(position, this.parentNode.__axis || position, d); });
-            tickEnter.style("opacity", epsilon).attr("transform", function(d) { return transform(this.parentNode.__axis || position, position, d); });
+            tickExit = tickExit.transition(context).style('opacity', epsilon).attr('transform', function(d) { return transform(position, this.parentNode.__axis || position, d); });
+            tickEnter.style('opacity', epsilon).attr('transform', function(d) { return transform(this.parentNode.__axis || position, position, d); });
             line = line.transition(context);
             text = text.transition(context);
         }
 
-        tick.style("opacity", 1).attr("transform", function(d) { return transform(position, position, d); });
+        tick.style('opacity', 1).attr('transform', function(d) { return transform(position, position, d); });
         tickExit.remove();
         text.text(format);
 
         switch (orient) {
             case top: {
-                path.attr("x1", range0).attr('y1', -tickSizeOuter).attr("x2", range1).attr('y2', -tickSizeOuter);
-                line.attr("x2", 0).attr("y2", -tickSizeInner);
-                text.attr("x", 0).attr("y", -spacing).attr("dy", "0em").style("text-anchor", "middle");
+                path.attr('x1', range0).attr('y1', -tickSizeOuter).attr('x2', range1).attr('y2', -tickSizeOuter);
+                line.attr('x2', 0).attr('y2', -tickSizeInner);
+                text.attr('x', 0).attr('y', -spacing).attr('dy', '0em').style('text-anchor', 'middle');
                 break;
             }
             case right: {
-                path.attr("x1", tickSizeOuter).attr('y1', range0).attr("x2", tickSizeOuter).attr('y2', range1);
-                line.attr("y2", 0).attr("x2", tickSizeInner);
-                text.attr("y", 0).attr("x", spacing).attr("dy", ".32em").style("text-anchor", "start");
+                path.attr('x1', tickSizeOuter).attr('y1', range0).attr('x2', tickSizeOuter).attr('y2', range1);
+                line.attr('y2', 0).attr('x2', tickSizeInner);
+                text.attr('y', 0).attr('x', spacing).attr('dy', '.32em').style('text-anchor', 'start');
                 break;
             }
             case bottom: {
-                path.attr("x1", range0).attr('y1', tickSizeOuter).attr("x2", range1).attr('y2', tickSizeOuter);
-                line.attr("x2", 0).attr("y2", tickSizeInner);
-                text.attr("x", 0).attr("y", spacing).attr("dy", ".71em").style("text-anchor", "middle");
+                path.attr('x1', range0).attr('y1', tickSizeOuter).attr('x2', range1).attr('y2', tickSizeOuter);
+                line.attr('x2', 0).attr('y2', tickSizeInner);
+                text.attr('x', 0).attr('y', spacing).attr('dy', '.71em').style('text-anchor', 'middle');
                 break;
             }
             case left: {
-                path.attr("x1", -tickSizeOuter).attr('y1', range0).attr("x2", -tickSizeOuter).attr('y2', range1);
-                line.attr("y2", 0).attr("x2", -tickSizeInner);
-                text.attr("y", 0).attr("x", -spacing).attr("dy", ".32em").style("text-anchor", "end");
+                path.attr('x1', -tickSizeOuter).attr('y1', range0).attr('x2', -tickSizeOuter).attr('y2', range1);
+                line.attr('y2', 0).attr('x2', -tickSizeInner);
+                text.attr('y', 0).attr('x', -spacing).attr('dy', '.32em').style('text-anchor', 'end');
                 break;
             }
         }

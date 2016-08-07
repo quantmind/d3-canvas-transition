@@ -1,6 +1,7 @@
 import json from 'rollup-plugin-json';
 import babel from 'rollup-plugin-babel';
 
+
 export default {
     entry: 'index.js',
     format: 'umd',
@@ -8,8 +9,9 @@ export default {
     plugins: [
         json(),
         babel({
+            include: 'src/**',
             babelrc: false,
-            presets: ['es2015-rollup']
+            presets: ['es2015-loose-rollup']
         })
     ],
     dest: 'build/d3-canvas-transition.js',
