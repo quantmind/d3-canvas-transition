@@ -1,16 +1,22 @@
+export default function deque () {
+    return new Deque;
+}
 
 
-export default class {
+function Deque () {
+    this._head = null;
+    this._tail = null;
+    this._length = 0;
 
-    constructor () {
-        this._head = null;
-        this._tail = null;
-        this._length = 0;
-    }
+    Object.defineProperty(this, 'length',  {
+        get () {
+            return this._length;
+        }
+    });
+}
 
-    get length () {
-        return this._length;
-    }
+
+Deque.prototype = deque.prototype = {
 
     prepend (child, refChild) {
         if (!this._length) {
@@ -34,7 +40,7 @@ export default class {
         if (!child._prev) this._head = child;
         if (!child._next) this._tail = child;
         this._length++;
-    }
+    },
 
     remove (child) {
         if (child._prev)
@@ -53,7 +59,7 @@ export default class {
         delete child._next;
 
         this._length--;
-    }
+    },
 
     list () {
         var child = this._head,
@@ -63,7 +69,7 @@ export default class {
             child = child._next;
         }
         return list;
-    }
+    },
 
     each (f) {
         var child = this._head;
@@ -72,4 +78,4 @@ export default class {
             child = child._next;
         }
     }
-}
+};

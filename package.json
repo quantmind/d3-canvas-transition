@@ -1,5 +1,5 @@
 {
-    "version": "0.1.1",
+    "version": "0.2.0",
     "name": "d3-canvas-transition",
     "title": "d3-canvas-transition",
     "description": "Animated transitions for D3 selections on svg and canvas",
@@ -17,7 +17,7 @@
     ],
     "license": "BSD-3-Clause",
     "author": "Luca Sbardella <luca@quantmind.com>",
-    "main": "build/d3-canvas-transition.js",
+    "main": "dist/d3-canvas-transition.min.js",
     "jsnext:main": "index",
     "dependencies": {
         "d3-transition": "1.0"
@@ -25,16 +25,16 @@
     "devDependencies": {
         "babelify": "7.3",
         "babel-tape-runner": "2.0",
-        "babel-preset-es2015": "6.13",
-        "babel-preset-es2015-loose-rollup": "7.0",
+        "babel-preset-es2015": "6.14",
+        "babel-preset-es2015-rollup": "rollup/babel-preset-es2015-rollup",
         "browserify": "13.1",
         "canvas": "1.4",
         "d3-shape": "1.0",
         "d3-scale": "1.0",
-        "eslint": "3.2",
+        "eslint": "3.5",
         "faucet": "0.0",
-        "jsdom": "9.4",
-        "rollup": "0.34",
+        "jsdom": "9.5",
+        "rollup": "0.36",
         "rollup-plugin-json": "2.0",
         "rollup-plugin-babel": "2.6",
         "tape": "4.6",

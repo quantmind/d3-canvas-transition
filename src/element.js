@@ -1,7 +1,8 @@
 import {map} from 'd3-collection';
 import {timeout} from 'd3-timer';
+
 import setAttribute from './path';
-import Deque from './deque';
+import deque from './deque';
 import * as d3 from 'd3-color';
 
 
@@ -101,7 +102,7 @@ export class CanvasElement {
         if (!(child instanceof CanvasElement))
             throw Error('Cannot insert a non canvas element into a canvas element');
         if (child._parent) child._parent.removeChild(child);
-        if (!this._deque) this._deque = new Deque();
+        if (!this._deque) this._deque = deque();
         this._deque.prepend(child, refChild);
         child._parent = this;
         touch(this.root, 1);

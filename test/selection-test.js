@@ -6,7 +6,7 @@ import * as d3 from '../';
 
 
 test('Test module', (t) => {
-    t.equal(typeof(d3.version), 'string');
+    t.equal(typeof(d3.canvasVersion), 'string');
     t.equal(typeof(d3.selection), 'function');
     t.equal(typeof(d3.select), 'function');
     t.equal(typeof(d3.selectAll), 'function');

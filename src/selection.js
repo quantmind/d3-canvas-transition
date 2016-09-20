@@ -1,23 +1,21 @@
-import * as d3 from 'd3-selection';
+import {selection} from 'd3-selection';
+
 import {CanvasElement} from './element';
 import {pen} from './path';
 import resolution from './utils';
 
 
-function selection (context, factor) {
+export default function canvasSelection (context, factor) {
     if (!factor) factor = resolution();
-    var s = d3.selection();
+    var s = selection();
     s._groups[0][0] = new CanvasElement(context, factor);
     return s;
 }
 
-selection.prototype = d3.selection.prototype;
+canvasSelection.prototype = selection.prototype;
 
 
-export default selection;
-
-
-const originalAttr = selection.prototype.attr;
+const originalAttr = canvasSelection.prototype.attr;
 
 
 function selectAttr (name, value) {
@@ -30,4 +28,4 @@ function selectAttr (name, value) {
 }
 
 
-selection.prototype.attr = selectAttr;
+canvasSelection.prototype.attr = selectAttr;
