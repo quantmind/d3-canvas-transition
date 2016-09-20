@@ -43,7 +43,7 @@
     "scripts": {
         "pretest": "rollup -c",
         "test": "npm run-script lint && babel-tape-runner `find test -name '*-test.js'` | faucet",
-        "prepublish": "npm run test && uglifyjs build/d3-canvas-transition.js -c -m -o build/d3-canvas-transition.min.js && rm -f build/d3-canvas-transition.zip && zip -j build/d3-canvas-transition.zip -- LICENSE README.md build/d3-canvas-transition.js build/d3-canvas-transition.min.js",
+        "prepublish": "npm run test && uglifyjs dist/d3-canvas-transition.js -c -m -o dist/d3-canvas-transition.min.js && rm -f dist/d3-canvas-transition.zip && zip -j dist/d3-canvas-transition.zip -- LICENSE README.md dist/d3-canvas-transition.js dist/d3-canvas-transition.min.js",
         "postpublish": "VERSION=`node -e 'console.log(require(\"./package.json\").version)'`; git push && git tag -am \"Release $VERSION.\" v${VERSION} && git push --tags",
         "lint": "eslint index.js src test"
     },
