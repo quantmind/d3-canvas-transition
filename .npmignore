@@ -1,0 +1,6 @@
+.idea
+.travis.yml
+play.py
+agile.json
+*.log
+dist/*.zip
