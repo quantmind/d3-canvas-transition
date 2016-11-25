@@ -1,0 +1,28 @@
+machine:
+
+  node:
+    version: 7.1.0
+
+
+dependencies:
+  pre:
+    sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev
+  override:
+    - npm install
+
+
+test:
+  override:
+    - npm test
+
+
+deployment:
+  publish:
+    branch: master
+    commands:
+      - git config --global user.email "bot@quantmind.com"
+      - git config --global user.username "qmbot"
+      - git config --global user.name "Quantmind Bot"
+      - cd && git clone git@github.com:quantmind/giottojs.org.git
+      - cd && echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
+      - npm run-script release

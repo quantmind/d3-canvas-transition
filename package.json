@@ -20,20 +20,23 @@
     "main": "dist/d3-canvas-transition.min.js",
     "jsnext:main": "index",
     "dependencies": {
+        "d3-selection": "1.0",
         "d3-transition": "1.0"
     },
     "devDependencies": {
         "babelify": "7.3",
         "babel-tape-runner": "2.0",
-        "babel-preset-es2015": "6.14",
+        "babel-preset-es2015": "6.18",
         "babel-preset-es2015-rollup": "rollup/babel-preset-es2015-rollup",
         "browserify": "13.1",
-        "canvas": "1.5",
+        "canvas": "1.6",
         "d3-shape": "1.0",
         "d3-scale": "1.0",
-        "eslint": "3.5",
+        "eslint": "3.10",
         "faucet": "0.0",
-        "jsdom": "9.5",
+        "jsdom": "9.8",
+        "package-preamble": "0.0",
+        "publish": "0.6",
         "rollup": "0.36",
         "rollup-plugin-json": "2.0",
         "rollup-plugin-babel": "2.6",
@@ -41,16 +44,14 @@
         "uglify-js": "2.7"
     },
     "scripts": {
-        "test": "npm run-script lint && babel-tape-runner `find test -name '*-test.js'` | faucet",
-        "rollup": "rollup -c",
-        "prepublish": "npm run-script rollup && uglifyjs dist/d3-canvas-transition.js -c -m -o dist/d3-canvas-transition.min.js && rm -f dist/d3-canvas-transition.zip && zip -j dist/d3-canvas-transition.zip -- LICENSE README.md dist/d3-canvas-transition.js dist/d3-canvas-transition.min.js",
-        "postpublish": "VERSION=`node -e 'console.log(require(\"./package.json\").version)'`; git push && git tag -am \"Release $VERSION.\" v${VERSION} && git push --tags",
-        "lint": "eslint index.js src test"
+        "test": "eslint index.js rollup.config.js src test && babel-tape-runner `find test -name '*-test.js'` | faucet",
+        "rollup": "rollup -c --banner \"$(preamble)\"",
+        "minify": "uglifyjs --preamble \"$(preamble)\" build/d3-canvas-transition.js -c -m -o build/d3-canvas-transition.min.js",
+        "prepublish": "npm run-script rollup && npm run-script minify",
+        "postpublish": "VERSION=`node -e 'console.log(require(\"./package.json\").version)'`; git push && git tag -am \"Release $VERSION.\" v${VERSION} && git push --tags && mkdir -p ../giottojs.org/latest && mkdir -p ../giottojs.org/d3-canvas-transition/${VERSION} && cp build/* ../giottojs.org/d3-canvas-transition/${VERSION}/ && cp build/* ../giottojs.org/latest/ && cd ../giottojs.org && git add d3-canvas-transition/${VERSION} latest && git commit -a -m \"d3-canvas-transition ${VERSION}\" && git push",
+        "release": "publish"
     },
-    "bugs": {
-        "url": "https://github.com/quantmind/d3-canvas-transition/issues"
-    },
-    "directories": {
-        "test": "test"
+    "babel": {
+        "presets": ["es2015"]
     }
 }

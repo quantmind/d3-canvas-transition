@@ -14,7 +14,7 @@ export default {
             presets: ['es2015-rollup']
         })
     ],
-    dest: 'dist/d3-canvas-transition.js',
+    dest: 'build/d3-canvas-transition.js',
     globals: {
         'd3-collection': 'd3',
         'd3-color': 'd3',

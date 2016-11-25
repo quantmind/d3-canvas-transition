@@ -1,6 +1,5 @@
 .idea
-.travis.yml
-play.py
-agile.json
+circle.yml
 *.log
-dist/*.zip
+test
+rollup.config.js
