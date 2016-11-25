@@ -17,10 +17,16 @@
     ],
     "license": "BSD-3-Clause",
     "author": "Luca Sbardella <luca@quantmind.com>",
-    "main": "dist/d3-canvas-transition.min.js",
+    "main": "build/d3-canvas-transition.min.js",
     "jsnext:main": "index",
+    "module": "index",
     "dependencies": {
+        "d3-color": "1.0",
+        "d3-dispatch": "1.0",
+        "d3-ease": "1.0",
+        "d3-interpolate": "1.0",
         "d3-selection": "1.0",
+        "d3-timer": "1.0",
         "d3-transition": "1.0"
     },
     "devDependencies": {
