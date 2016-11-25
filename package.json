@@ -1,5 +1,5 @@
 {
-    "version": "0.2.0",
+    "version": "0.2.1",
     "name": "d3-canvas-transition",
     "title": "d3-canvas-transition",
     "description": "Animated transitions for D3 selections on svg and canvas",
@@ -22,9 +22,10 @@
     "module": "index",
     "dependencies": {
         "d3-color": "1.0",
+        "d3-collection": "1.0",
         "d3-dispatch": "1.0",
         "d3-ease": "1.0",
-        "d3-interpolate": "1.0",
+        "d3-interpolate": "1.1",
         "d3-selection": "1.0",
         "d3-timer": "1.0",
         "d3-transition": "1.0"
