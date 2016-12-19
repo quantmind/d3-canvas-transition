@@ -6,19 +6,9 @@ import deque from './deque';
 import * as d3 from 'd3-color';
 
 
-const
-    namespace = 'canvas',
-    tag_line = 'line',
-    tag_text = 'text',
-    defaultBaseline = 'middle',
-    textAlign = {
-        start: 'start',
-        middle: 'center',
-        end: 'end'
-    };
+const namespace = 'canvas';
 
-export const fontProperties = ['style', 'variant', 'weight', 'size', 'family'];
-
+export var tagDraws = map();
 /**
  * A proxy for a data entry on canvas
  *
@@ -157,15 +147,13 @@ export class CanvasElement {
 
     draw (t) {
         var ctx = this.context,
-            attrs = this.attrs;
+            drawer = tagDraws.get(this.tagName);
 
-        if (attrs) {
+        if (this.attrs) {
             ctx.save();
             transform(this, this.attrs.get('transform'));
             ctx.save();
-            if (this.tagName === tag_line) drawLine(this);
-            else if (this.tagName === tag_text) drawText(this);
-            else path(this, attrs.get('d'), t);
+            if (drawer) drawer(this, t);
             fillStyle(this);
             strokeStyle(this);
             ctx.restore();
@@ -176,7 +164,7 @@ export class CanvasElement {
                 child.draw(t);
             });
 
-        if (attrs) ctx.restore();
+        if (this.attrs) ctx.restore();
     }
 
     each (f) {
@@ -316,60 +304,6 @@ function transform(node, trans) {
         node.context.translate(node.factor*bits[0], node.factor*bits[1]);
     }
     return true;
-}
-
-
-function drawLine(node) {
-    var attrs = node.attrs;
-    node.context.moveTo(node.factor*(attrs.get('x1') || 0), node.factor*(attrs.get('y1') || 0));
-    node.context.lineTo(node.factor*attrs.get('x2'), node.factor*attrs.get('y2'));
-}
-
-function drawText(node) {
-    var size = fontString(node);
-    node.context.textAlign = textAlign[node.getValue('text-anchor')] || textAlign.middle;
-    node.context.textBaseline = node.getValue('text-baseline') || defaultBaseline;
-    node.context.fillText(node.textContent || '', fontLocation(node, 'x', size), fontLocation(node, 'y', size));
-}
-
-
-function path(node, path) {
-    if (path) {
-        if (typeof(path.draw) === 'function') path.draw(node);
-        else if (path.context) path.context(node.context)();
-    }
-}
-
-
-function fontString (node) {
-    let bits = [],
-        size = 0,
-        key, v;
-    for (let i=0; i<fontProperties.length; ++i) {
-        key = fontProperties[i];
-        v = node.getValue('font-' + key);
-        if (v) {
-            if (key === 'size') {
-                size = node.factor*v;
-                v = size + 'px';
-            }
-            bits.push(v);
-        }
-    }
-    if (size)
-        node.context.font = bits.join(' ');
-    return size;
-}
-
-
-function fontLocation (node, d, size) {
-    var p = node.attrs.get(d) || 0,
-        dp = node.attrs.get('d' + d) || 0;
-    if (dp) {
-        if (dp.substring(dp.length - 2) == 'em') dp = size * dp.substring(0, dp.length - 2);
-        else if (dp.substring(dp.length - 2) == 'px') dp = +dp.substring(0, dp.length - 2);
-    }
-    return node.factor*(p + dp);
 }
 
 

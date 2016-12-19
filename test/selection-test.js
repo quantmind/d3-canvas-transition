@@ -12,7 +12,6 @@ test('Test module', (t) => {
     t.equal(typeof(d3.selectAll), 'function');
     t.equal(typeof(d3.resolution), 'function');
     t.equal(typeof(d3.tweenAttr), 'function');
-    t.equal(typeof(d3.fontProperties), 'object');
     t.end();
 });
 
@@ -109,8 +108,11 @@ test('Test select by id', (t) => {
 
     var g = group.selectAll('#bla');
     t.equal(g.size(), 1);
-    t.equal(g.node().tagName, 'g');
-    t.equal(g.node().id, 'bla');
+    var node = g.node();
+    t.equal(node.tagName, 'g');
+    t.equal(node.id, 'bla');
+    t.equal(node.parentNode, group.node());
+    t.equal(node.context, group.node().context);
 
     t.end();
 });
