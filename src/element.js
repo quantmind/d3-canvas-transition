@@ -30,9 +30,10 @@ export const fontProperties = ['style', 'variant', 'weight', 'size', 'family'];
  */
 export class CanvasElement {
 
-    constructor (context, factor) {
+    constructor (context, factor, tag) {
         this.context = context;
         this.factor = factor || 1;
+        this.tagName = tag || 'canvas';
     }
 
     // API
@@ -76,9 +77,7 @@ export class CanvasElement {
     }
 
     createElementNS (namespaceURI, qualifiedName) {
-        var elem = new CanvasElement(this.context, this.factor);
-        elem.tag = qualifiedName;
-        return elem;
+        return new CanvasElement(this.context, this.factor, qualifiedName);
     }
 
     hasChildNodes () {
@@ -164,8 +163,8 @@ export class CanvasElement {
             ctx.save();
             transform(this, this.attrs.get('transform'));
             ctx.save();
-            if (this.tag === tag_line) drawLine(this);
-            else if (this.tag === tag_text) drawText(this);
+            if (this.tagName === tag_line) drawLine(this);
+            else if (this.tagName === tag_text) drawText(this);
             else path(this, attrs.get('d'), t);
             fillStyle(this);
             strokeStyle(this);
@@ -236,18 +235,32 @@ export class CanvasElement {
 
 function select(selector, deque, selections) {
 
-    var selectors = selector.split(' ');
+    var selectors = selector.split(' '),
+        bits, tag, child;
 
     for (let s=0; s<selectors.length; ++s) {
+        var classes, id;
+
+        child = deque._head;
         selector = selectors[s];
-        var bits = selector.split('.'),
-            tag = bits[0],
-            classes = bits.splice(1).join(' '),
-            child = deque._head;
+
+        if (selector.indexOf('#') > -1) {
+            bits = selector.split('#');
+            tag = bits[0];
+            id = bits[1];
+        }
+        else if (selector.indexOf('.') > -1) {
+            bits = selector.split('.');
+            tag = bits[0];
+            classes = bits.splice(1).join(' ');
+        }
+        else
+            tag = selector;
 
         while (child) {
-            if (!tag || child.tag === tag) {
-                if (classes && child.class !== classes) {
+            if (!tag || child.tagName === tag) {
+                if ((id && child.id !== id) ||
+                    (classes && child.class !== classes)) {
                     // nothing to do
                 }
                 else if (selections)

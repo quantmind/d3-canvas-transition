@@ -2,7 +2,7 @@ import {test} from 'tape';
 import {selection} from 'd3-selection';
 import {symbol} from 'd3-shape';
 import {getCanvas} from './utils';
-import * as d3 from '../';
+import * as d3 from '../index';
 
 
 test('Test module', (t) => {
@@ -95,6 +95,22 @@ test('Test remove', (t) => {
     paths.each(function () {
         t.equal(this.getAttribute('fill'), 'blue');
     });
+
+    t.end();
+});
+
+
+test('Test select by id', (t) => {
+    var group = d3.selection(getCanvas());
+    group.append('g').attr('id', 'fooo');
+    group.append('g').attr('id', 'bla');
+
+    t.equal(group.selectAll('*').size(), 2);
+
+    var g = group.selectAll('#bla');
+    t.equal(g.size(), 1);
+    t.equal(g.node().tagName, 'g');
+    t.equal(g.node().id, 'bla');
 
     t.end();
 });

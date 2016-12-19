@@ -2,7 +2,7 @@ import {test} from 'tape';
 import {scaleLinear} from 'd3-scale';
 import {getCanvas} from './utils';
 
-import * as d3 from '../';
+import * as d3 from '../index';
 
 
 

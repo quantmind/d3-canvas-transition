@@ -1,6 +1,6 @@
 import {test} from 'tape';
 import {getCanvas} from './utils';
-import * as d3 from '../';
+import * as d3 from '../index';
 
 
 test('Test empty element', (t) => {
