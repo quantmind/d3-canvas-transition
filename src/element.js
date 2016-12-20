@@ -1,9 +1,9 @@
 import {map} from 'd3-collection';
 import {timeout} from 'd3-timer';
 
+import {strokeStyle, fillStyle} from './style';
 import setAttribute from './path';
 import deque from './deque';
-import * as d3 from 'd3-color';
 
 
 const namespace = 'canvas';
@@ -261,35 +261,6 @@ function select(selector, deque, selections) {
     }
 
     return selections;
-}
-
-
-function strokeStyle (node) {
-    var stroke = node.attrs.get('stroke');
-    if (stroke && stroke !== 'none') {
-        stroke = d3.color(stroke);
-        var opacity = node.getValue('stroke-opacity');
-        if (opacity || opacity === 0)
-            stroke.opacity = opacity;
-        node.context.strokeStyle = '' + stroke;
-        node.context.lineWidth = node.factor * (node.getValue('stroke-width') || 1);
-        node.context.stroke();
-        return stroke;
-    }
-}
-
-
-function fillStyle (node) {
-    var fill = node.attrs.get('fill');
-    if (fill && fill !== 'none') {
-        fill = d3.color(fill);
-        var opacity = node.getValue('fill-opacity');
-        if (opacity || opacity===0)
-            fill.opacity = opacity;
-        node.context.fillStyle = ''+fill;
-        node.context.fill();
-        return fill;
-    }
 }
 
 
