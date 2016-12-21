@@ -68,7 +68,7 @@ test('Test prepend element', (t) => {
 
 
 test('Test many elements', (t) => {
-    var canvas = new d3.selection(getCanvas()),
+    var canvas = new d3.selectCanvas(getCanvas()),
         node = canvas.node(),
         text = canvas.selectAll('text.test').data(['a', 'b', 'c', 'd', 'f', 'g']);
 

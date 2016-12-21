@@ -8,8 +8,7 @@ import * as d3 from '../index';
 
 test('Test axis', (t) => {
 
-    var context = getCanvas(),
-        group = d3.selection(context),
+    var group = d3.selectCanvas(getCanvas()),
         axis = d3.axisBottom(scaleLinear()),
         axgroup = group.selectAll('g.x-axis').data([null]);
 

@@ -2,8 +2,9 @@ import {jsdom} from 'jsdom';
 import {default as Canvas} from 'canvas';
 
 
-global.document = jsdom('<h1>Tests</h1>h1>');
-global.window = {devicePixelRatio: 2};
+global.document = jsdom('<div></div>');
+global.window = global.document.documentElement;
+global.window.devicePixelRatio = 2;
 
 
 export function identity (d) {

@@ -1,78 +1,125 @@
 import {map} from 'd3-collection';
 import {timeout} from 'd3-timer';
 
-import {strokeStyle, fillStyle} from './style';
-import setAttribute from './path';
+import {strokeStyle, fillStyle, StyleNode} from './attrs/style';
+import setAttribute from './attrs/set';
 import deque from './deque';
 
 
 const namespace = 'canvas';
 
 export var tagDraws = map();
+export var attributes = map();
 /**
  * A proxy for a data entry on canvas
  *
- * It partially implements the Node Api
+ * It partially implements the Node Api (please pull request!)
  * https://developer.mozilla.org/en-US/docs/Web/API/Node
  *
- * It allow the use the d3-select and d3-transition libraries
+ * It allows the use the d3-select and d3-transition libraries
  * on canvas joins
  */
-export class CanvasElement {
+export function CanvasElement (context, factor, tag) {
+    var _deque;
+    factor = factor || 1;
 
-    constructor (context, factor, tag) {
-        this.context = context;
-        this.factor = factor || 1;
-        this.tagName = tag || 'canvas';
-    }
+    Object.defineProperties(this, {
+        context: {
+            get () {
+                return context;
+            }
+        },
+        deque: {
+            get () {
+                if (!_deque) _deque = deque();
+                return _deque;
+            }
+        },
+        factor: {
+            get () {
+                return factor;
+            }
+        },
+        tagName: {
+            get () {
+                return tag;
+            }
+        },
+        childNodes: {
+            get () {
+                return _deque ? _deque.list() : [];
+            }
+        },
+        firstChild: {
+            get () {
+                return _deque ? _deque._head : null;
+            }
+        },
+        lastChild: {
+            get () {
+                return _deque ? _deque._tail : null;
+            }
+        },
+        parentNode: {
+            get() {
+                return this._parent;
+            }
+        },
+        previousSibling: {
+            get () {
+                return this._prev;
+            }
+        },
+        nextSibling: {
+            get () {
+                return this._next;
+            }
+        },
+        namespaceURI: {
+            get () {
+                return namespace;
+            }
+        },
+        //
+        // Canvas Element properties
+        countNodes: {
+            get () {
+                return _deque ? _deque._length : 0;
+            }
+        },
+        root: {
+            get () {
+                if (this._parent) return this._parent.root;
+                return this;
+            }
+        }
+    });
+}
 
-    // API
-    get childNodes () {
-        return this._deque ? this._deque.list(): [];
-    }
-
-    get firstChild () {
-        return this._deque ? this._deque._head : null;
-    }
-
-    get lastChild () {
-        return this._deque ? this._deque._tail : null;
-    }
-
-    get parentNode () {
-        return this._parent;
-    }
-
-    get previousSibling () {
-        return this._prev;
-    }
-
-    get nextSibling () {
-        return this._next;
-    }
+CanvasElement.prototype = {
 
     querySelectorAll (selector) {
-        if (this._deque) {
+        if (this.countNodes) {
             if (selector === '*') return this.childNodes;
-            return select(selector, this._deque, []);
+            return select(selector, this.deque, []);
         } else
             return [];
-    }
+    },
 
     querySelector (selector) {
-        if (this._deque) {
-            if (selector === '*') return this._deque._head;
-            return select(selector, this._deque);
+        if (this.countNodes) {
+            if (selector === '*') return this.deque._head;
+            return select(selector, this.deque);
         }
-    }
+    },
 
     createElementNS (namespaceURI, qualifiedName) {
         return new CanvasElement(this.context, this.factor, qualifiedName);
-    }
+    },
 
     hasChildNodes () {
-        return this._deque ? this._deque.length > 0 : false;
-    }
+        return this.countNodes > 0;
+    },
 
     contains (child) {
         while(child) {
@@ -80,32 +127,31 @@ export class CanvasElement {
             child = child._parent;
         }
         return false;
-    }
+    },
 
     appendChild (child) {
         return this.insertBefore(child);
-    }
+    },
 
     insertBefore (child, refChild) {
         if (child === this) throw Error('inserting self into children');
         if (!(child instanceof CanvasElement))
             throw Error('Cannot insert a non canvas element into a canvas element');
         if (child._parent) child._parent.removeChild(child);
-        if (!this._deque) this._deque = deque();
-        this._deque.prepend(child, refChild);
+        this.deque.prepend(child, refChild);
         child._parent = this;
         touch(this.root, 1);
         return child;
-    }
+    },
 
     removeChild (child) {
         if (child._parent === this) {
             delete child._parent;
-            this._deque.remove(child);
+            this.deque.remove(child);
             touch(this.root, 1);
             return child;
         }
-    }
+    },
 
     setAttribute (attr, value) {
         if (attr === 'class') {
@@ -118,107 +164,71 @@ export class CanvasElement {
             if (!this.attrs) this.attrs = map();
             if (setAttribute(this, attr, value)) touch(this.root, 1);
         }
-    }
+    },
 
     removeAttribute (attr) {
         if (this.attrs) {
             this.attrs.remove(attr);
             touch(this.root, 1);
         }
-    }
+    },
 
     getAttribute (attr) {
-        if (this.attrs) return this.attrs.get(attr);
-    }
-
-    get namespaceURI () {
-        return namespace;
-    }
+        var value = this.attrs ? this.attrs.get(attr) : undefined;
+        if (value === undefined && !this._parent)
+            value = this.context.canvas[attr];
+        return value;
+    },
 
     // Canvas methods
-    get countNodes () {
-        return this._deque ? this._deque._length : 0;
-    }
-
-    get root () {
-        if (this._parent) return this._parent.root;
-        return this;
-    }
-
-    draw (t) {
-        var ctx = this.context,
-            drawer = tagDraws.get(this.tagName);
-
-        if (this.attrs) {
-            ctx.save();
-            transform(this, this.attrs.get('transform'));
-            ctx.save();
-            if (drawer) drawer(this, t);
-            fillStyle(this);
-            strokeStyle(this);
-            ctx.restore();
-        }
-
-        if (this._deque)
-            this._deque.each((child) => {
-                child.draw(t);
-            });
-
-        if (this.attrs) ctx.restore();
-    }
-
     each (f) {
-        if (this._deque) this._deque.each(f);
-    }
+        if (this.countNodes) this.deque.each(f);
+    },
 
     getValue (attr) {
         var value = this.getAttribute(attr);
         if (value === undefined && this._parent) return this._parent.getValue(attr);
         return value;
-    }
+    },
 
     // Additional attribute functions
     removeProperty(name) {
         this.removeAttribute(name);
-    }
+    },
 
     setProperty(name, value) {
         this.setAttribute(name, value);
-    }
+    },
 
     getProperty(name) {
         return this.getAttribute(name);
-    }
+    },
 
     getPropertyValue (name) {
         return this.getAttribute(name);
-    }
+    },
 
     // Proxies to this object
-    getComputedStyle () {
-        return this;
-    }
+    getComputedStyle (node) {
+        return new StyleNode(node);
+    },
 
     get ownerDocument () {
         return this;
-    }
+    },
 
     get style () {
         return this;
-    }
+    },
 
     get defaultView () {
         return this;
-    }
+    },
 
     get document () {
         return this;
     }
-    //
-    onStart () {
-        return;
-    }
-}
+};
 
 
 function select(selector, deque, selections) {
@@ -264,25 +274,32 @@ function select(selector, deque, selections) {
 }
 
 
-function transform(node, trans) {
-    if (!trans) return;
-    var index1 = trans.indexOf('translate('),
-        index2, s, bits;
-    if (index1 > -1) {
-        s = trans.substring(index1+10);
-        index2 = s.indexOf(')');
-        bits = s.substring(0, index2).split(',');
-        node.context.translate(node.factor*bits[0], node.factor*bits[1]);
-    }
-    return true;
-}
-
-
 function touch(node, v) {
     if (!node._touches) node._touches = 0;
     node._touches += v;
-    if (!node._touches || node._inloop) return;
-    node._inloop = timeout(redraw(node));
+    if (!node._touches || node._scheduled) return;
+    node._scheduled = timeout(redraw(node));
+}
+
+
+function draw (node, t) {
+    if (node.attrs) {
+        var ctx = node.context,
+            drawer = tagDraws.get(node.tagName);
+
+        ctx.save();
+        attributes.each((attr) => attr(node, t));
+        strokeStyle(node, t);
+        fillStyle(node, t);
+        ctx.save();
+        if (drawer) drawer(node, t);
+        //
+        ctx.stroke();
+        ctx.fill();
+        ctx.restore();
+    }
+    node.each((child) => draw(child, t));
+    if (node.attrs) ctx.restore();
 }
 
 
@@ -295,8 +312,8 @@ function redraw (node) {
         ctx.closePath();
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        node.draw();
-        node._inloop = false;
+        draw(node);
+        node._scheduled = false;
         touch(node, 0);
     };
 }

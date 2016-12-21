@@ -7,16 +7,13 @@ import * as d3 from '../index';
 
 test('Test module', (t) => {
     t.equal(typeof(d3.canvasVersion), 'string');
-    t.equal(typeof(d3.selection), 'function');
-    t.equal(typeof(d3.select), 'function');
-    t.equal(typeof(d3.selectAll), 'function');
+    t.equal(typeof(d3.selectCanvas), 'function');
     t.equal(typeof(d3.resolution), 'function');
-    t.equal(typeof(d3.tweenAttr), 'function');
     t.end();
 });
 
 
-test('Test resolution', (t) => {
+test('Test resolution function', (t) => {
     t.equal(d3.resolution(), 2);
     t.equal(d3.resolution(3), 3);
     t.equal(d3.resolution(0), 2);
@@ -26,7 +23,7 @@ test('Test resolution', (t) => {
 
 
 test('Test selection', (t) => {
-    var group = d3.selection(getCanvas());
+    var group = d3.selectCanvas(getCanvas());
     t.ok(group instanceof selection);
     t.equal(group.size(), 1);
     t.ok(group instanceof selection);
@@ -37,7 +34,7 @@ test('Test selection', (t) => {
 
 
 test('Test root node', (t) => {
-    var group = d3.selection(getCanvas());
+    var group = d3.selectCanvas(getCanvas());
     var node = group.node();
     t.equal(node.factor, 2);
     t.ok(node.context);
@@ -47,8 +44,16 @@ test('Test root node', (t) => {
 });
 
 
+test('Test root styles', (t) => {
+    var group = d3.selectCanvas(getCanvas(500, 300));
+    t.equal(group.style('height'), 300);
+    t.equal(group.style('width'), 500);
+    t.end();
+});
+
+
 test('Test enter', (t) => {
-    var group = d3.selection(getCanvas()),
+    var group = d3.selectCanvas(getCanvas()),
         paths = group.selectAll('path').data([1, 2, 3]),
         sy = symbol();
 
@@ -66,7 +71,7 @@ test('Test enter', (t) => {
 
 
 test('Test remove', (t) => {
-    var group = d3.selection(getCanvas()),
+    var group = d3.selectCanvas(getCanvas()),
         paths = group.selectAll('path').data([1, 2, 3]);
 
     paths.enter()
@@ -100,7 +105,7 @@ test('Test remove', (t) => {
 
 
 test('Test select by id', (t) => {
-    var group = d3.selection(getCanvas());
+    var group = d3.selectCanvas(getCanvas());
     group.append('g').attr('id', 'fooo');
     group.append('g').attr('id', 'bla');
 
