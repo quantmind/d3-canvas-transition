@@ -1,10 +1,19 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [d3-canvas-transition](#d3-canvas-transition)
+  - [Installing](#installing)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # d3-canvas-transition
 
 [![CircleCI](https://circleci.com/gh/quantmind/d3-canvas-transition.svg?style=svg)](https://circleci.com/gh/quantmind/d3-canvas-transition)
 [![Dependency Status](https://david-dm.org/quantmind/d3-canvas-transition.svg)](https://david-dm.org/quantmind/d3-canvas-transition)
 [![devDependency Status](https://david-dm.org/quantmind/d3-canvas-transition/dev-status.svg)](https://david-dm.org/quantmind/d3-canvas-transition#info=devDependencies)
 
-**PRE ALPHA - DONT USE IT**
+**ALPHA - USE IT WIDTH CARE**
 
 This is a [d3 plugin](https://bost.ocks.org/mike/d3-plugin/) for drawing on
 svg and canvas using the same [d3-transition](https://github.com/d3/d3-transition) API.
@@ -12,7 +21,10 @@ svg and canvas using the same [d3-transition](https://github.com/d3/d3-transitio
 ## Installing
 
 If you use [NPM](https://www.npmjs.com/package/d3-canvas-transition), ``npm install d3-canvas-transition``.
-Otherwise, download the latest release.
+Otherwise, download the [latest release](https://github.com/quantmind/d3-canvas-transition/releases).
+You can also load directly from [giottojs.org](https://giottojs.org),
+as a [standalone library](https://giottojs.org/latest/d3-canvas-transition.js) or
+[unpkg](https://unpkg.com/d3-canvas-transition/).
 AMD, CommonJS, and vanilla environments are supported. In vanilla, a d3 global is exported.
 Try [d3-canvas-transition](https://runkit.com/npm/d3-canvas-transition) in your browser.
 ```javascript
@@ -25,4 +37,9 @@ Try [d3-canvas-transition](https://runkit.com/npm/d3-canvas-transition) in your 
 <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
 <script src="https://d3js.org/d3-transition.v1.min.js"></script>
 <script src="https://giottojs.org/latest/d3-canvas-transition.min.js"></script>
+<body>
+<canvas id="hi" width="400" height="400"></canvas>
+<script>
+var canvas = var canvas = d3.selectCanvas('#hi');
+</script>
 ```
