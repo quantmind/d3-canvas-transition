@@ -1,12 +1,3 @@
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
-
-- [d3-canvas-transition](#d3-canvas-transition)
-  - [Installing](#installing)
-
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
 # d3-canvas-transition
 
 [![CircleCI](https://circleci.com/gh/quantmind/d3-canvas-transition.svg?style=svg)](https://circleci.com/gh/quantmind/d3-canvas-transition)
@@ -40,6 +31,6 @@ Try [d3-canvas-transition](https://runkit.com/npm/d3-canvas-transition) in your 
 <body>
 <canvas id="hi" width="400" height="400"></canvas>
 <script>
-var canvas = var canvas = d3.selectCanvas('#hi');
+var canvas = d3.selectCanvas('#hi');
 </script>
 ```
