@@ -1,15 +1,16 @@
 import {test} from 'tape';
 import {scaleLinear} from 'd3-scale';
-import {getCanvas} from './utils';
+import {axisBottom} from 'd3-axis';
 
-import * as d3 from '../index';
+import {getCanvas} from './utils';
+import {selectCanvas} from '../index';
 
 
 
 test('Test axis', (t) => {
 
-    var group = d3.selectCanvas(getCanvas()),
-        axis = d3.axisBottom(scaleLinear()),
+    var group = selectCanvas(getCanvas()),
+        axis = axisBottom(scaleLinear()),
         axgroup = group.selectAll('g.x-axis').data([null]);
 
     axgroup

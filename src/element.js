@@ -1,15 +1,13 @@
 import {map} from 'd3-collection';
-import {timeout} from 'd3-timer';
 
-import {strokeStyle, fillStyle, StyleNode} from './attrs/style';
+import {StyleNode} from './attrs/style';
 import setAttribute from './attrs/set';
 import deque from './deque';
+import {touch} from './draw';
 
 
 const namespace = 'canvas';
 
-export var tagDraws = map();
-export var attributes = map();
 /**
  * A proxy for a data entry on canvas
  *
@@ -281,49 +279,4 @@ function select(selector, deque, selections) {
     }
 
     return selections;
-}
-
-
-function touch(node, v) {
-    if (!node._touches) node._touches = 0;
-    node._touches += v;
-    if (!node._touches || node._scheduled) return;
-    node._scheduled = timeout(redraw(node));
-}
-
-
-function draw (node, t) {
-    if (node.attrs) {
-        var ctx = node.context,
-            drawer = tagDraws.get(node.tagName);
-
-        ctx.save();
-        attributes.each((attr) => attr(node, t));
-        strokeStyle(node, t);
-        fillStyle(node, t);
-        ctx.save();
-        if (drawer) drawer(node, t);
-        //
-        ctx.stroke();
-        ctx.fill();
-        ctx.restore();
-    }
-    node.each((child) => draw(child, t));
-    if (node.attrs) ctx.restore();
-}
-
-
-function redraw (node) {
-
-    return function () {
-        var ctx = node.context;
-        node._touches = 0;
-        ctx.beginPath();
-        ctx.closePath();
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        draw(node);
-        node._scheduled = false;
-        touch(node, 0);
-    };
 }

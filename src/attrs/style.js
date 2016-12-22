@@ -4,26 +4,16 @@ import {color} from 'd3-color';
 export function strokeStyle (node) {
     var ctx = node.context,
         stroke = getColor(node.attrs.get('stroke')),
-        width = getSize(node.attrs.get('stroke-width')),
-        lineJoin = node.attrs.get('stroke-linejoin'),
-        save = false;
+        width = getSize(node.attrs.get('stroke-width'));
 
-    if (width !== undefined) {
-        save = true;
-        ctx.lineWidth = node.factor * width;
-    }
+    if (width !== undefined) ctx.lineWidth = node.factor * width;
     if (stroke) {
-        save = true;
         var opacity = node.getValue('stroke-opacity');
         if (opacity || opacity === 0)
             stroke.opacity = opacity;
         ctx.strokeStyle = '' + stroke;
     }
-    if (lineJoin) {
-        save = true;
-        ctx.lineJoin = lineJoin;
-    }
-    return save;
+    return stroke;
 }
 
 

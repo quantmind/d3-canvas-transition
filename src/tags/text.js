@@ -9,14 +9,17 @@ const
 
 
 export default function (node) {
-    var size = fontString(node);
-    node.context.textAlign = textAlign[node.getValue('text-anchor')] || textAlign.middle;
-    node.context.textBaseline = node.getValue('text-baseline') || defaultBaseline;
-    node.context.fillText(
+    var size = fontString(node),
+        ctx = node.context;
+    ctx.textAlign = textAlign[node.getValue('text-anchor')] || textAlign.middle;
+    ctx.textBaseline = node.getValue('text-baseline') || defaultBaseline;
+    ctx.fillText(
         node.textContent || '',
         fontLocation(node, 'x', size),
         fontLocation(node, 'y', size)
     );
+    ctx.stroke();
+    ctx.fill();
 }
 
 

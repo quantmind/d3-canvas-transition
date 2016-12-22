@@ -19,14 +19,8 @@ export default function (node) {
         if (index1 > -1) {
             s = trans.substring(index1 + 7);
             var angle = +s.substring(0, s.indexOf(')'));
-            if (angle === angle) {
-                ctx.save();
-                ctx.rotate(angle*Math.PI/180);
-            }
+            if (angle === angle) ctx.rotate(angle*Math.PI/180);
         }
     }
-    if (x || y) {
-        ctx.save();
-        ctx.translate(node.factor * x, node.factor * y);
-    }
+    if (x || y) ctx.translate(node.factor * x, node.factor * y);
 }

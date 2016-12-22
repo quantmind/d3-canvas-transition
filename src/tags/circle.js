@@ -1,4 +1,4 @@
-export default function (node) {
+export default function (node, stroke, fill) {
     var attrs = node.attrs,
         ctx = node.context,
         f = node.factor;
@@ -10,4 +10,6 @@ export default function (node) {
         0, 2 * Math.PI
     );
     ctx.closePath();
+    ctx.stroke();
+    if (fill) ctx.fill();
 }
