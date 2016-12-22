@@ -4,7 +4,7 @@
 [![Dependency Status](https://david-dm.org/quantmind/d3-canvas-transition.svg)](https://david-dm.org/quantmind/d3-canvas-transition)
 [![devDependency Status](https://david-dm.org/quantmind/d3-canvas-transition/dev-status.svg)](https://david-dm.org/quantmind/d3-canvas-transition#info=devDependencies)
 
-**ALPHA - USE IT WIDTH CARE**
+**ALPHA - USE IT WITH CARE**
 
 This is a [d3 plugin](https://bost.ocks.org/mike/d3-plugin/) for drawing on
 svg and canvas using the same [d3-transition](https://github.com/d3/d3-transition) API.
