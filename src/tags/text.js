@@ -23,7 +23,7 @@ export default function (node) {
 function fontString (node) {
     let bits = [],
         size = 0,
-        key, v;
+        key, v, family;
     for (let i=0; i<fontProperties.length; ++i) {
         key = fontProperties[i];
         v = node.getValue('font-' + key);
@@ -31,12 +31,17 @@ function fontString (node) {
             if (key === 'size') {
                 size = node.factor*v;
                 v = size + 'px';
+            } else if (key === 'family') {
+                family = v;
             }
             bits.push(v);
         }
     }
-    if (size)
+    //
+    if (size) {
+        if (!family) bits.push('sans serif');
         node.context.font = bits.join(' ');
+    }
     return size;
 }
 

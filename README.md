@@ -34,3 +34,4 @@ Try [d3-canvas-transition](https://runkit.com/npm/d3-canvas-transition) in your 
 var canvas = d3.selectCanvas('#hi');
 </script>
 ```
+For examples check [lsbardel blocks](http://bl.ocks.org/lsbardel)

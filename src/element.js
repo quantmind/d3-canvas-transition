@@ -20,7 +20,8 @@ export var attributes = map();
  * on canvas joins
  */
 export function CanvasElement (context, factor, tag) {
-    var _deque;
+    var _deque,
+        text = '';
     factor = factor || 1;
 
     Object.defineProperties(this, {
@@ -78,6 +79,15 @@ export function CanvasElement (context, factor, tag) {
         namespaceURI: {
             get () {
                 return namespace;
+            }
+        },
+        textContent: {
+            get () {
+                return text;
+            },
+            set (value) {
+                text = ''+value;
+                touch(this.root, 1);
             }
         },
         //

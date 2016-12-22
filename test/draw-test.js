@@ -6,6 +6,20 @@ import {selectCanvas} from '../index';
 import {getCanvas} from './utils';
 
 
+test('Test text', (t) => {
+    var group = selectCanvas(getCanvas()),
+        node = group.node(),
+        text = group.append('text'),
+        touches = node._touches;
+
+    t.equal(text.text(), '');
+    t.equal(node._touches, touches);
+    t.equal(text.text('ciao').text(), 'ciao');
+    t.equal(node._touches, touches+1);
+    t.end();
+});
+
+
 test('Test path', (t) => {
     var group = selectCanvas(getCanvas()),
         node = group.node(),
