@@ -2,9 +2,10 @@ export default function (node) {
     var x = +(node.attrs.get('x') || 0),
         y = +(node.attrs.get('y') || 0),
         trans = node.attrs.get('transform'),
-        ctx = node.context;
+        ctx = node.context,
+        sx, sy;
 
-    if (trans) {
+    if (typeof(trans) === 'string') {
         var index1 = trans.indexOf('translate('),
             index2, s, bits;
         if (index1 > -1) {
@@ -21,6 +22,14 @@ export default function (node) {
             var angle = +s.substring(0, s.indexOf(')'));
             if (angle === angle) ctx.rotate(angle*Math.PI/180);
         }
+    } else if (trans) {
+        x += trans.x;
+        y += trans.y;
+        sx = trans.k;
     }
     if (x || y) ctx.translate(node.factor * x, node.factor * y);
+    if (sx) {
+        sy = sy || sx;
+        ctx.scale(sx, sy);
+    }
 }

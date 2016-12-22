@@ -88,6 +88,16 @@ export function CanvasElement (context, factor, tag) {
                 touch(this.root, 1);
             }
         },
+        clientLeft: {
+            get () {
+                return this.context.canvas.clientLeft;
+            }
+        },
+        clientTop: {
+            get () {
+                return this.context.canvas.clientTop;
+            }
+        },
         //
         // Canvas Element properties
         countNodes: {
@@ -188,6 +198,16 @@ CanvasElement.prototype = {
         return value;
     },
 
+    addEventListener () {
+        var canvas = this.context.canvas;
+        arguments[1] = wrapListener(this, arguments[1]);
+        canvas.addEventListener.apply(canvas, arguments);
+    },
+
+    getBoundingClientRect () {
+        return this.context.canvas.getBoundingClientRect();
+    },
+
     // Canvas methods
     each (f) {
         if (this.countNodes) this.deque.each(f);
@@ -279,4 +299,12 @@ function select(selector, deque, selections) {
     }
 
     return selections;
+}
+
+
+function wrapListener (node, listener) {
+
+    return function () {
+        listener.apply(node, arguments);
+    };
 }

@@ -18,8 +18,6 @@ export default function (node) {
         fontLocation(node, 'x', size),
         fontLocation(node, 'y', size)
     );
-    ctx.stroke();
-    ctx.fill();
 }
 
 

@@ -6,7 +6,7 @@ export function strokeStyle (node) {
         stroke = getColor(node.attrs.get('stroke')),
         width = getSize(node.attrs.get('stroke-width'));
 
-    if (width !== undefined) ctx.lineWidth = node.factor * width;
+    if (width) ctx.lineWidth = node.factor * width;
     if (stroke) {
         var opacity = node.getValue('stroke-opacity');
         if (opacity || opacity === 0)

@@ -38,7 +38,6 @@
         "babel-preset-es2015-rollup": "3.0",
         "browserify": "13.1",
         "canvas": "1.6",
-        "d3-axis": "1.0",
         "d3-shape": "1.0",
         "d3-scale": "1.0",
         "eslint": "3.12",
