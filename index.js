@@ -1,6 +1,5 @@
 export {default as selectCanvas} from './src/selection';
-export {default as resolution} from './src/utils';
-export {CanvasElement} from './src/element';
+export {default as resolution} from './src/resolution';
 export {version as canvasVersion} from './package.json';
 
 import {tagDraws, attributes} from './src/draw';
@@ -16,6 +15,9 @@ tagDraws.set('line', line);
 tagDraws.set('path', path);
 tagDraws.set('rect', rect);
 tagDraws.set('text', text);
+
+tagDraws.set('linearGradient', false);
+tagDraws.set('radialGradient', false);
 
 import opacity from './src/attrs/opacity';
 import transform from './src/attrs/transform';

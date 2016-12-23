@@ -9,19 +9,21 @@ export var attributes = map();
 
 
 export function touch (node, v) {
-    if (!node._touches) node._touches = 0;
-    node._touches += v;
-    if (!node._touches || node._scheduled) return;
-    node._scheduled = timeout(redraw(node));
+    var root = node.root;
+    if (!root._touches) root._touches = 0;
+    root._touches += v;
+    if (!root._touches || root._scheduled) return;
+    root._scheduled = timeout(redraw(root));
 }
 
 
 function draw (node, t) {
-    var children = node.countNodes;
-
-    if (node.attrs) {
+    var children = node.countNodes,
+        drawer = tagDraws.get(node.tagName);
+    if (drawer === false)
+        return;
+    else if (node.attrs) {
         var ctx = node.context,
-            drawer = tagDraws.get(node.tagName),
             stroke, fill;
 
         // save the current context

@@ -17,10 +17,9 @@ const namespace = 'canvas';
  * It allows the use the d3-select and d3-transition libraries
  * on canvas joins
  */
-export function CanvasElement (context, factor, tag) {
+export function CanvasElement (tagName, context) {
     var _deque,
         text = '';
-    factor = factor || 1;
 
     Object.defineProperties(this, {
         context: {
@@ -34,14 +33,9 @@ export function CanvasElement (context, factor, tag) {
                 return _deque;
             }
         },
-        factor: {
-            get () {
-                return factor;
-            }
-        },
         tagName: {
             get () {
-                return tag;
+                return tagName;
             }
         },
         childNodes: {
@@ -85,17 +79,17 @@ export function CanvasElement (context, factor, tag) {
             },
             set (value) {
                 text = ''+value;
-                touch(this.root, 1);
+                touch(this, 1);
             }
         },
         clientLeft: {
             get () {
-                return this.context.canvas.clientLeft;
+                return context.canvas.clientLeft;
             }
         },
         clientTop: {
             get () {
-                return this.context.canvas.clientTop;
+                return context.canvas.clientTop;
             }
         },
         //
@@ -107,8 +101,12 @@ export function CanvasElement (context, factor, tag) {
         },
         root: {
             get () {
-                if (this._parent) return this._parent.root;
-                return this;
+                return this.context._rootElement;
+            }
+        },
+        factor: {
+            get () {
+                return this.context._factor;
             }
         }
     });
@@ -117,22 +115,15 @@ export function CanvasElement (context, factor, tag) {
 CanvasElement.prototype = {
 
     querySelectorAll (selector) {
-        if (this.countNodes) {
-            if (selector === '*') return this.childNodes;
-            return select(selector, this.deque, []);
-        } else
-            return [];
+        return this.countNodes ? select(selector, this, []) : [];
     },
 
     querySelector (selector) {
-        if (this.countNodes) {
-            if (selector === '*') return this.deque._head;
-            return select(selector, this.deque);
-        }
+        if (this.countNodes) return select(selector, this);
     },
 
     createElementNS (namespaceURI, qualifiedName) {
-        return new CanvasElement(this.context, this.factor, qualifiedName);
+        return new CanvasElement(qualifiedName, this.context);
     },
 
     hasChildNodes () {
@@ -158,7 +149,7 @@ CanvasElement.prototype = {
         if (child._parent) child._parent.removeChild(child);
         this.deque.prepend(child, refChild);
         child._parent = this;
-        touch(this.root, 1);
+        touch(this, 1);
         return child;
     },
 
@@ -166,7 +157,7 @@ CanvasElement.prototype = {
         if (child._parent === this) {
             delete child._parent;
             this.deque.remove(child);
-            touch(this.root, 1);
+            touch(this, 1);
             return child;
         }
     },
@@ -180,14 +171,14 @@ CanvasElement.prototype = {
         }
         else {
             if (!this.attrs) this.attrs = map();
-            if (setAttribute(this, attr, value)) touch(this.root, 1);
+            if (setAttribute(this, attr, value)) touch(this, 1);
         }
     },
 
     removeAttribute (attr) {
         if (this.attrs) {
             this.attrs.remove(attr);
-            touch(this.root, 1);
+            touch(this, 1);
         }
     },
 
@@ -254,53 +245,91 @@ CanvasElement.prototype = {
     },
 
     get document () {
-        return this;
+        return this.root;
     }
 };
 
 
-function select(selector, deque, selections) {
+function select(selector, node, selections) {
 
     var selectors = selector.split(' '),
-        bits, tag, child;
+        iterator = new NodeIterator(node),
+        child = iterator.next(),
+        classes, bits, tag, id, sel;
 
     for (let s=0; s<selectors.length; ++s) {
-        var classes, id;
-
-        child = deque._head;
         selector = selectors[s];
-
-        if (selector.indexOf('#') > -1) {
-            bits = selector.split('#');
-            tag = bits[0];
-            id = bits[1];
+        if (selector === '*') {
+            selector = {};
+        } else {
+            if (selector.indexOf('#') > -1) {
+                bits = selector.split('#');
+                tag = bits[0];
+                id = bits[1];
+            }
+            else if (selector.indexOf('.') > -1) {
+                bits = selector.split('.');
+                tag = bits[0];
+                classes = bits.splice(1).join(' ');
+            }
+            else
+                tag = selector;
+            selector = {tag, id, classes};
         }
-        else if (selector.indexOf('.') > -1) {
-            bits = selector.split('.');
-            tag = bits[0];
-            classes = bits.splice(1).join(' ');
-        }
-        else
-            tag = selector;
+        selectors[s] = selector;
+    }
 
-        while (child) {
-            if (!tag || child.tagName === tag) {
-                if ((id && child.id !== id) ||
-                    (classes && child.class !== classes)) {
+    while (child) {
+        for (let s=0; s<selectors.length; ++s) {
+            sel = selectors[s];
+
+            if (!sel.tag || child.tagName === sel.tag) {
+                if ((sel.id && child.id !== sel.id) ||
+                    (sel.classes && child.class !== sel.classes)) {
                     // nothing to do
                 }
-                else if (selections)
+                else if (selections) {
                     selections.push(child);
+                    break;
+                }
                 else
                     return child;
             }
-            child = child._next;
         }
+        child = iterator.next();
     }
 
     return selections;
 }
 
+
+function NodeIterator (node) {
+    this.node = node;
+    this.current = node;
+}
+
+
+NodeIterator.prototype = {
+
+    next () {
+        var current = this.current;
+        if (!current) return null;
+        if (current.firstChild)
+            current = current.firstChild;
+        else {
+            while (current !== this.node) {
+                if (current.nextSibling) {
+                    current = current.nextSibling;
+                    break;
+                }
+                current = current.parentNode;
+            }
+            if (current === this.node) current = null;
+        }
+        this.current = current;
+        return current;
+    }
+};
 
 function wrapListener (node, listener) {
 

@@ -1,3 +1,5 @@
+import getSize from '../size';
+
 const
     fontProperties = ['style', 'variant', 'weight', 'size', 'family'],
     defaultBaseline = 'middle',
@@ -9,14 +11,15 @@ const
 
 
 export default function (node) {
-    var size = fontString(node),
+    var factor = node.factor,
+        size = fontString(node)/factor,
         ctx = node.context;
     ctx.textAlign = textAlign[node.getValue('text-anchor')] || textAlign.middle;
     ctx.textBaseline = node.getValue('text-baseline') || defaultBaseline;
     ctx.fillText(
         node.textContent || '',
-        fontLocation(node, 'x', size),
-        fontLocation(node, 'y', size)
+        factor*getSize(node.attrs.get('dx') || 0, size),
+        factor*getSize(node.attrs.get('dy') || 0, size)
     );
 }
 
@@ -44,15 +47,4 @@ function fontString (node) {
         node.context.font = bits.join(' ');
     }
     return size;
-}
-
-
-function fontLocation (node, d, size) {
-    var p = node.attrs.get(d) || 0,
-        dp = node.attrs.get('d' + d) || 0;
-    if (dp) {
-        if (dp.substring(dp.length - 2) == 'em') dp = size * dp.substring(0, dp.length - 2);
-        else if (dp.substring(dp.length - 2) == 'px') dp = +dp.substring(0, dp.length - 2);
-    }
-    return node.factor*(p + dp);
 }

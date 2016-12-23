@@ -6,7 +6,6 @@ import {getCanvas} from './utils';
 import {selectCanvas} from '../index';
 
 
-
 test('Test axis', (t) => {
 
     var group = selectCanvas(getCanvas()),
@@ -20,7 +19,7 @@ test('Test axis', (t) => {
         .merge(axgroup)
             .call(axis);
 
-    t.equal(group.selectAll('*').size(), 1);
+    t.equal(group.selectAll('*').size(), 35);
     axgroup = group.select('g.x-axis');
     t.ok(axgroup.node());
 

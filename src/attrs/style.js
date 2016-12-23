@@ -1,44 +1,70 @@
+import selectCanvas from '../selection';
+import getSize from '../size';
+
 import {color} from 'd3-color';
+
+
+const gradients = {
+
+    linearGradient (node, opacity) {
+        var ctx = node.context,
+            canvas = ctx.canvas,
+            x1 = getSize(node.attrs.get('x1', '0%'), canvas.width),
+            x2 = getSize(node.attrs.get('x2', '100%'), canvas.width),
+            y1 = getSize(node.attrs.get('y1', '0%'), canvas.height),
+            y2 = getSize(node.attrs.get('y2', '0%'), canvas.height),
+            col;
+
+        var gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+        node.each((child) => {
+            col = color(child.attrs.get('stop-color'));
+            if (opacity || opacity === 0) col.opacity = opacity;
+            gradient.addColorStop(
+                getSize(child.attrs.get('offset')),
+                '' + col
+            );
+        });
+        return gradient;
+    },
+
+    radialGradient () {
+
+    }
+};
 
 
 export function strokeStyle (node) {
     var ctx = node.context,
-        stroke = getColor(node.attrs.get('stroke')),
+        stroke = getColor(node, node.attrs.get('stroke'), node.getValue('stroke-opacity')),
         width = getSize(node.attrs.get('stroke-width'));
-
     if (width) ctx.lineWidth = node.factor * width;
-    if (stroke) {
-        var opacity = node.getValue('stroke-opacity');
-        if (opacity || opacity === 0)
-            stroke.opacity = opacity;
-        ctx.strokeStyle = '' + stroke;
-    }
+    if (stroke) ctx.strokeStyle = stroke;
     return stroke;
 }
 
 
 export function fillStyle (node) {
-    var fill = getColor(node.attrs.get('fill'));
-    if (fill) {
-        var opacity = node.getValue('fill-opacity');
-        if (opacity || opacity===0)
-            fill.opacity = opacity;
-        node.context.fillStyle = ''+fill;
-        return fill;
+    var ctx = node.context,
+        fill = getColor(node, node.attrs.get('fill'), node.getValue('fill-opacity'));
+    if (fill) ctx.fillStyle = fill;
+    return fill;
+}
+
+
+function getColor(node, value, opacity) {
+    if (value && value !== 'none') {
+        if (typeof(value) === 'string' && value.substring(0, 4) === 'url(') {
+            var selector = value.substring(4, value.length-1);
+            node = selectCanvas(node.root).select(selector).node();
+            return node ? gradient(node, opacity) : null;
+        }
+        var col = color(value);
+        if (col) {
+            if (opacity || opacity===0)
+                col.opacity = opacity;
+            return '' + col;
+        }
     }
-}
-
-
-function getColor(value) {
-    if (value && value !== 'none') return color(value);
-}
-
-
-function getSize (value) {
-    if (typeof(value) == 'string' && value.substring(value.length-2) === 'px')
-        return +value.substring(0, value.length-2);
-    else if (typeof(value) == 'number')
-        return value;
 }
 
 
@@ -57,3 +83,9 @@ StyleNode.prototype = {
     }
 
 };
+
+
+function gradient(node, opacity) {
+    var g = gradients[node.tagName];
+    if (g) return g(node, opacity);
+}

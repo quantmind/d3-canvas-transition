@@ -1,10 +1,10 @@
 import {test} from 'tape';
 import {getCanvas} from './utils';
-import * as d3 from '../index';
+import {selectCanvas} from '../index';
 
 
 test('Test empty element', (t) => {
-    var node = new d3.CanvasElement(getCanvas());
+    var node = selectCanvas(getCanvas()).node();
     t.notOk(node.hasChildNodes());
     t.notOk(node.previousSibling);
     t.notOk(node.nextSibling);
@@ -16,7 +16,7 @@ test('Test empty element', (t) => {
 
 
 test('Test append element', (t) => {
-    var node = new d3.CanvasElement(getCanvas()),
+    var node = selectCanvas(getCanvas()).node(),
         child = node.createElementNS(null, 'p');
     node.appendChild(child);
     t.ok(node.hasChildNodes());
@@ -37,7 +37,7 @@ test('Test append element', (t) => {
 
 
 test('Test prepend element', (t) => {
-    var node = new d3.CanvasElement(getCanvas()),
+    var node = new selectCanvas(getCanvas()).node(),
         child = node.createElementNS(null, 'p');
     node.insertBefore(child);
     t.ok(node.hasChildNodes());
@@ -68,7 +68,7 @@ test('Test prepend element', (t) => {
 
 
 test('Test many elements', (t) => {
-    var canvas = new d3.selectCanvas(getCanvas()),
+    var canvas = selectCanvas(getCanvas()),
         node = canvas.node(),
         text = canvas.selectAll('text.test').data(['a', 'b', 'c', 'd', 'f', 'g']);
 
