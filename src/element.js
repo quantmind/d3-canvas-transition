@@ -92,16 +92,26 @@ export function CanvasElement (tagName, context) {
                 return context.canvas.clientTop;
             }
         },
+        clientWidth: {
+            get () {
+                return context.canvas.clientWidth;
+            }
+        },
+        clientHeight: {
+            get () {
+                return context.canvas.clientHeight;
+            }
+        },
+        rootNode: {
+            get () {
+                return this.context._rootElement;
+            }
+        },
         //
         // Canvas Element properties
         countNodes: {
             get () {
                 return _deque ? _deque._length : 0;
-            }
-        },
-        root: {
-            get () {
-                return this.context._rootElement;
             }
         },
         factor: {
@@ -245,7 +255,7 @@ CanvasElement.prototype = {
     },
 
     get document () {
-        return this.root;
+        return this.rootNode;
     }
 };
 
@@ -317,14 +327,14 @@ NodeIterator.prototype = {
         if (current.firstChild)
             current = current.firstChild;
         else {
-            while (current !== this.node) {
+            while (current) {
                 if (current.nextSibling) {
                     current = current.nextSibling;
                     break;
                 }
                 current = current.parentNode;
+                if (current === this.node) current = null;
             }
-            if (current === this.node) current = null;
         }
         this.current = current;
         return current;

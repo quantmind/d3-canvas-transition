@@ -9,7 +9,7 @@ export var attributes = map();
 
 
 export function touch (node, v) {
-    var root = node.root;
+    var root = node.rootNode;
     if (!root._touches) root._touches = 0;
     root._touches += v;
     if (!root._touches || root._scheduled) return;

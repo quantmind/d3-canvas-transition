@@ -55,7 +55,7 @@ function getColor(node, value, opacity) {
     if (value && value !== 'none') {
         if (typeof(value) === 'string' && value.substring(0, 4) === 'url(') {
             var selector = value.substring(4, value.length-1);
-            node = selectCanvas(node.root).select(selector).node();
+            node = selectCanvas(node.rootNode).select(selector).node();
             return node ? gradient(node, opacity) : null;
         }
         var col = color(value);
