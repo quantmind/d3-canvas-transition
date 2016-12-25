@@ -1,5 +1,6 @@
 export {default as selectCanvas} from './src/selection';
 export {default as resolution} from './src/resolution';
+export {default as getSize} from './src/size';
 export {version as canvasVersion} from './package.json';
 
 import {tagDraws, attributes} from './src/draw';
