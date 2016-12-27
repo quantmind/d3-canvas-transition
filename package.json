@@ -1,5 +1,5 @@
 {
-    "version": "0.2.5",
+    "version": "0.2.6",
     "name": "d3-canvas-transition",
     "title": "d3-canvas-transition",
     "description": "Animated transitions for D3 selections on svg and canvas",

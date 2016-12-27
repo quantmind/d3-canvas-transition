@@ -17,7 +17,7 @@ export function touch (node, v) {
 }
 
 
-function draw (node, t) {
+function draw (node) {
     var children = node.countNodes,
         drawer = tagDraws.get(node.tagName);
     if (drawer === false)
@@ -30,17 +30,17 @@ function draw (node, t) {
         ctx.save();
         //
         // apply attributes and styles
-        attributes.each((attr) => attr(node, t));
-        stroke = strokeStyle(node, t);
-        fill = fillStyle(node, t);
+        attributes.each((attr) => attr(node));
+        stroke = strokeStyle(node);
+        fill = fillStyle(node);
         //
         if (drawer) drawer(node, stroke, fill);
-        if (children) node.each((child) => draw(child, t));
+        if (children) node.each((child) => draw(child));
         //
         // restore
         ctx.restore();
     } else if (children) {
-        node.each((child) => draw(child, t));
+        node.each((child) => draw(child));
     }
 }
 

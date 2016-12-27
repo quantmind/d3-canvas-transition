@@ -2,7 +2,7 @@ import {selection, select} from 'd3-selection';
 
 import {CanvasElement} from './element';
 import resolution from './resolution';
-import canvasAttr from './attrs/wrap';
+import path from './attrs/path';
 
 
 const originalAttr = selection.prototype.attr;
@@ -37,10 +37,16 @@ export default function selectCanvas (context, factor) {
 
 function selectionAttr (name, value) {
     if (arguments.length > 1) {
-        var node = this._parents[0] || this.node();
+        var node = this._parents[0] || this.node(),
+            attr;
         if (isCanvas(node) && typeof(value.context) === 'function') {
-            value.context(node.context);
-            arguments[1] = canvasAttr(value, node.factor);
+            attr = value.pathObject;
+            if (!attr) {
+                value.context(node.context);
+                attr = path(value, node.factor);
+                value.pathObject = attr;
+            }
+            arguments[1] = attr;
         }
     }
     return originalAttr.apply(this, arguments);
