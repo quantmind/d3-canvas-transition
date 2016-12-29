@@ -4,6 +4,8 @@ import {StyleNode} from './attrs/style';
 import setAttribute from './attrs/set';
 import deque from './deque';
 import {touch} from './draw';
+import {NodeIterator} from './iterator';
+import canvasListener, {mouseEvents} from './events';
 
 
 const namespace = 'canvas';
@@ -19,6 +21,7 @@ const namespace = 'canvas';
  */
 export function CanvasElement (tagName, context) {
     var _deque,
+        events = {},
         text = '';
 
     Object.defineProperties(this, {
@@ -31,6 +34,11 @@ export function CanvasElement (tagName, context) {
             get () {
                 if (!_deque) _deque = deque();
                 return _deque;
+            }
+        },
+        events: {
+            get () {
+                return events;
             }
         },
         tagName: {
@@ -199,10 +207,22 @@ CanvasElement.prototype = {
         return value;
     },
 
-    addEventListener () {
+    addEventListener (type, listener) {
         var canvas = this.context.canvas;
-        arguments[1] = wrapListener(this, arguments[1]);
+        arguments[0] = mouseEvents[type] || type;
+        arguments[1] = canvasListener;
         canvas.addEventListener.apply(canvas, arguments);
+        var listeners = this.events[type];
+        if (!listeners) this.events[type] = listeners = [];
+        if (listeners.indexOf(listener) === -1) listeners.push(listener);
+    },
+
+    removeEventListener (type, listener) {
+        var listeners = this.events[type];
+        if (listeners) {
+            var i = listeners.indexOf(listener);
+            if (i > -1) listeners.splice(i, 1);
+        }
     },
 
     getBoundingClientRect () {
@@ -310,40 +330,4 @@ function select(selector, node, selections) {
     }
 
     return selections;
-}
-
-
-function NodeIterator (node) {
-    this.node = node;
-    this.current = node;
-}
-
-
-NodeIterator.prototype = {
-
-    next () {
-        var current = this.current;
-        if (!current) return null;
-        if (current.firstChild)
-            current = current.firstChild;
-        else {
-            while (current) {
-                if (current.nextSibling) {
-                    current = current.nextSibling;
-                    break;
-                }
-                current = current.parentNode;
-                if (current === this.node) current = null;
-            }
-        }
-        this.current = current;
-        return current;
-    }
-};
-
-function wrapListener (node, listener) {
-
-    return function () {
-        listener.apply(node, arguments);
-    };
 }

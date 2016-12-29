@@ -1,4 +1,4 @@
-export default function (node, stroke, fill) {
+export default function (node, stroke, fill, point) {
     var attrs = node.attrs,
         ctx = node.context,
         f = node.factor;
@@ -12,4 +12,5 @@ export default function (node, stroke, fill) {
     ctx.closePath();
     ctx.stroke();
     if (fill) ctx.fill();
+    if (point && ctx.isPointInPath(point.x, point.y)) point.nodes.push(node);
 }

@@ -17,7 +17,7 @@ export function touch (node, v) {
 }
 
 
-function draw (node) {
+function draw (node, point) {
     var children = node.countNodes,
         drawer = tagDraws.get(node.tagName);
     if (drawer === false)
@@ -31,21 +31,22 @@ function draw (node) {
         //
         // apply attributes and styles
         attributes.each((attr) => attr(node));
+        //
         stroke = strokeStyle(node);
         fill = fillStyle(node);
         //
-        if (drawer) drawer(node, stroke, fill);
-        if (children) node.each((child) => draw(child));
+        if (drawer) drawer(node, stroke, fill, point);
+        if (children) node.each((child) => draw(child, point));
         //
         // restore
         ctx.restore();
     } else if (children) {
-        node.each((child) => draw(child));
+        node.each((child) => draw(child, point));
     }
 }
 
 
-function redraw (node) {
+export function redraw (node, point) {
 
     return function () {
         var ctx = node.context;
@@ -54,8 +55,10 @@ function redraw (node) {
         ctx.closePath();
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        draw(node);
+        if (point) point.nodes = [];
+        draw(node, point);
         node._scheduled = false;
         touch(node, 0);
+        return point ? point.nodes : null;
     };
 }
