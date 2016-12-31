@@ -37,14 +37,16 @@ function mousemoveEvent (context, nodes, event) {
         active = nodes.length ? nodes[nodes.length-1] : null,
         node, i;
 
-    // Handle mouseleave
+    // Handle actives
     if (actives) {
         for (i = 0; i < actives.length; ++i) {
             node = actives[i];
             if (active && node !== active && node.parentNode === active.parentNode)
                 trigger(node, event, 'mouseleave');
-            else if (nodes.indexOf(node) > -1)
+            else if (nodes.indexOf(node) > -1) {
                 newActives.push(node);
+                trigger(node, event, 'mousemove');
+            }
             else
                 trigger(node, event, 'mouseleave');
         }
@@ -52,14 +54,9 @@ function mousemoveEvent (context, nodes, event) {
 
     context._activeNodes = actives = newActives;
 
-    for (i=0; i<nodes.length; ++i) {
-        node = nodes[i];
-        if (actives.indexOf(node) > -1)
-            trigger(node, event, 'mouseover');
-        else if (node === active || node.parentNode !== active.parentNode) {
-            actives.push(node);
-            trigger(node, event, 'mouseenter');
-        }
+    if (actives.indexOf(active) === -1) {
+        actives.push(active);
+        trigger(active, event, 'mouseenter');
     }
 }
 
