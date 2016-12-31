@@ -8,6 +8,7 @@ import path from './attrs/path';
 const originalAttr = selection.prototype.attr;
 var defaultFactor;
 
+
 selection.prototype.attr = selectionAttr;
 selection.prototype.canvas = asCanvas;
 selection.prototype.canvasResolution = canvasResolution;

@@ -19,7 +19,7 @@ export default function (node) {
     ctx.fillText(
         node.textContent || '',
         factor*getSize(node.attrs.get('dx') || 0, size),
-        factor*getSize(node.attrs.get('dy') || 0, size)
+        factor*(getSize(node.attrs.get('dy') || 0, size) - 2)
     );
 }
 

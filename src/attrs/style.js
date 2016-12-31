@@ -37,7 +37,7 @@ export function strokeStyle (node) {
     var ctx = node.context,
         stroke = getColor(node, node.attrs.get('stroke'), node.getValue('stroke-opacity')),
         width = getSize(node.attrs.get('stroke-width'));
-    if (width) ctx.lineWidth = 2 * node.factor * width;
+    if (width) ctx.lineWidth = node.factor * width;
     if (stroke) ctx.strokeStyle = stroke;
     return width === 0 ? false : true;
 }
