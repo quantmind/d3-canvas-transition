@@ -2,8 +2,8 @@ import {redraw} from './draw';
 
 
 export const mouseEvents = {
-    mouseenter: 'mouseover',
-    mouseleave: 'mouseover'
+    mouseenter: 'mousemove',
+    mouseleave: 'mousemove'
 };
 
 
@@ -18,7 +18,7 @@ export default function (event) {
     };
 
     var nodes = redraw(root, event.canvasPoint)(),
-        handler = event.type === 'mouseover' ? mousemoveEvent : defaultEvent;
+        handler = event.type === 'mousemove' ? mousemoveEvent : defaultEvent;
 
     handler(context, nodes, event);
 }
@@ -56,7 +56,7 @@ function mousemoveEvent (context, nodes, event) {
         node = nodes[i];
         if (actives.indexOf(node) > -1)
             trigger(node, event, 'mouseover');
-        else {
+        else if (node === active || node.parentNode !== active.parentNode) {
             actives.push(node);
             trigger(node, event, 'mouseenter');
         }

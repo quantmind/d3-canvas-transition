@@ -33,7 +33,7 @@ function fontString (node) {
         v = node.getValue('font-' + key);
         if (v) {
             if (key === 'size') {
-                size = node.factor*v;
+                size = node.factor*getSize(v);
                 v = size + 'px';
             } else if (key === 'family') {
                 family = v;

@@ -10,7 +10,7 @@ export default function (node, stroke, fill, point) {
         0, 2 * Math.PI
     );
     ctx.closePath();
-    ctx.stroke();
+    if (stroke) ctx.stroke();
     if (fill) ctx.fill();
     if (point && ctx.isPointInPath(point.x, point.y)) point.nodes.push(node);
 }

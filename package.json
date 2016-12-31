@@ -1,5 +1,5 @@
 {
-    "version": "0.2.6",
+    "version": "0.2.7",
     "name": "d3-canvas-transition",
     "title": "d3-canvas-transition",
     "description": "Animated transitions for D3 selections on svg and canvas",
@@ -17,7 +17,10 @@
         "animation"
     ],
     "license": "BSD-3-Clause",
-    "author": "Luca Sbardella <luca@quantmind.com>",
+    "author": {
+        "name": "quantmind.com",
+        "email": "message@quantmind.com"
+    },
     "main": "build/d3-canvas-transition.js",
     "jsnext:main": "index",
     "module": "index",
