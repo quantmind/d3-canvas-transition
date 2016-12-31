@@ -28,7 +28,7 @@ Deque.prototype = deque.prototype = {
             child._next = refChild;
 
             if (refChild._prev)
-                refChild._prev.next = child;
+                refChild._prev._next = child;
 
             refChild._prev = child;
         }

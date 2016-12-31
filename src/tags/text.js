@@ -1,7 +1,6 @@
 import getSize from '../size';
 
-const
-    fontProperties = ['style', 'variant', 'weight', 'size', 'family'],
+var fontProperties = ['style', 'variant', 'weight', 'size', 'family'],
     defaultBaseline = 'middle',
     textAlign = {
         start: 'start',

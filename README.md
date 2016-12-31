@@ -19,19 +19,14 @@ as a [standalone library](https://giottojs.org/latest/d3-canvas-transition.js) o
 AMD, CommonJS, and vanilla environments are supported. In vanilla, a d3 global is exported.
 Try [d3-canvas-transition](https://runkit.com/npm/d3-canvas-transition) in your browser.
 ```javascript
-<script src="https://d3js.org/d3-color.v1.min.js"></script>
 <script src="https://d3js.org/d3-collection.v1.min.js"></script>
-<script src="https://d3js.org/d3-dispatch.v1.min.js"></script>
-<script src="https://d3js.org/d3-ease.v1.min.js"></script>
 <script src="https://d3js.org/d3-selection.v1.min.js"></script>
 <script src="https://d3js.org/d3-timer.v1.min.js"></script>
-<script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
-<script src="https://d3js.org/d3-transition.v1.min.js"></script>
 <script src="https://giottojs.org/latest/d3-canvas-transition.min.js"></script>
 <body>
 <canvas id="hi" width="400" height="400"></canvas>
 <script>
-var canvas = d3.selectCanvas('#hi');
+var canvas = d3.select('#hi').canvas();
 </script>
 ```
 For examples check [lsbardel blocks](http://bl.ocks.org/lsbardel)

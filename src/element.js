@@ -5,10 +5,10 @@ import setAttribute from './attrs/set';
 import deque from './deque';
 import {touch} from './draw';
 import {NodeIterator} from './iterator';
-import canvasListener, {mouseEvents} from './events';
+import {canvasListener, canvasNodeListener, mouseEvents} from './events';
 
 
-const namespace = 'canvas';
+var namespace = 'canvas';
 
 /**
  * A proxy for a data entry on canvas
@@ -209,9 +209,15 @@ CanvasElement.prototype = {
 
     addEventListener (type, listener) {
         var canvas = this.context.canvas;
-        arguments[0] = mouseEvents[type] || type;
-        arguments[1] = canvasListener;
-        canvas.addEventListener.apply(canvas, arguments);
+        if (this.rootNode === this) {
+            arguments[1] = canvasListener;
+            canvas.addEventListener.apply(canvas, arguments);
+        }
+        else {
+            arguments[0] = mouseEvents[type] || type;
+            arguments[1] = canvasNodeListener;
+            canvas.addEventListener.apply(canvas, arguments);
+        }
         var listeners = this.events[type];
         if (!listeners) this.events[type] = listeners = [];
         if (listeners.indexOf(listener) === -1) listeners.push(listener);

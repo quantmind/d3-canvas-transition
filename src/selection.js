@@ -5,13 +5,14 @@ import resolution from './resolution';
 import path from './attrs/path';
 
 
-const originalAttr = selection.prototype.attr;
+var originalAttr = selection.prototype.attr;
 var defaultFactor;
 
 
 selection.prototype.attr = selectionAttr;
 selection.prototype.canvas = asCanvas;
 selection.prototype.canvasResolution = canvasResolution;
+
 
 
 export default function selectCanvas (context, factor) {

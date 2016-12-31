@@ -22,6 +22,16 @@ export default function (node) {
             var angle = +s.substring(0, s.indexOf(')'));
             if (angle === angle) ctx.rotate(angle*Math.PI/180);
         }
+
+        index1 = trans.indexOf('scale(');
+        if (index1 > -1) {
+            s = trans.substring(index1 + 6);
+            index2 = s.indexOf(')');
+            bits = s.substring(0, index2).split(',');
+            sx = +bits[0];
+            if (bits.length === 2) sy = +bits[1];
+        }
+
     } else if (trans) {
         x += trans.x;
         y += trans.y;

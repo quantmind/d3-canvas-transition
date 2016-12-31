@@ -1,13 +1,21 @@
 import {redraw} from './draw';
 
 
-export const mouseEvents = {
+export var mouseEvents = {
     mouseenter: 'mousemove',
     mouseleave: 'mousemove'
 };
 
 
-export default function (event) {
+export function canvasListener (event) {
+    var context = this.getContext('2d'),
+        root = context._rootElement;
+    if (!root) return;
+    trigger(root, event);
+}
+
+
+export function canvasNodeListener (event) {
     var context = this.getContext('2d'),
         root = context._rootElement;
     if (!root) return;
