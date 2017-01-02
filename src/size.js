@@ -10,3 +10,12 @@ export default function (value, dim) {
     else if (typeof(value) == 'number')
         return value;
 }
+
+
+export var sizeTags = {};
+
+
+export function nodeDim (node) {
+    var tag = sizeTags[node.tagName];
+    return tag ? tag(node) : {x: 0, y: 0, width: node.context.canvas.width, height: node.context.canvas.height};
+}

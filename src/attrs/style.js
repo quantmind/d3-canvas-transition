@@ -1,22 +1,22 @@
 import selectCanvas from '../selection';
-import getSize from '../size';
+import getSize, {nodeDim} from '../size';
 
 import {color} from 'd3-color';
 
 
 const gradients = {
 
-    linearGradient (node, opacity) {
-        var ctx = node.context,
-            canvas = ctx.canvas,
-            x1 = getSize(node.attrs.get('x1', '0%'), canvas.width),
-            x2 = getSize(node.attrs.get('x2', '100%'), canvas.width),
-            y1 = getSize(node.attrs.get('y1', '0%'), canvas.height),
-            y2 = getSize(node.attrs.get('y2', '0%'), canvas.height),
+    linearGradient (node, gradNode, opacity) {
+        var ctx = gradNode.context,
+            dim = nodeDim(node),
+            x1 = getSize(gradNode.attrs.get('x1') || '0%', dim.width),
+            x2 = getSize(gradNode.attrs.get('x2') || '100%', dim.width),
+            y1 = getSize(gradNode.attrs.get('y1') || '0%', dim.height),
+            y2 = getSize(gradNode.attrs.get('y2') || '0%', dim.height),
             col;
 
         var gradient = ctx.createLinearGradient(x1, y1, x2, y2);
-        node.each((child) => {
+        gradNode.each((child) => {
             col = color(child.attrs.get('stop-color'));
             if (opacity || opacity === 0) col.opacity = opacity;
             gradient.addColorStop(
@@ -27,43 +27,44 @@ const gradients = {
         return gradient;
     },
 
-    radialGradient () {
+    radialGradient (node, gradNode, opacity) {
+        var ctx = gradNode.context,
+            dim = nodeDim(node),
+            cx = getSize(gradNode.attrs.get('cx') || '50%', dim.width),
+            cy = getSize(gradNode.attrs.get('cy') || '50%', dim.height),
+            fx = getSize(gradNode.attrs.get('fx') || cx, dim.width),
+            fy = getSize(gradNode.attrs.get('fy') || cy, dim.height),
+            r = getSize(gradNode.attrs.get('r') || '50%', Math.max(dim.height, dim.width)),
+            col;
 
+        var gradient = ctx.createRadialGradient(dim.x + fx, dim.y + fy, 0, dim.x + cx, dim.y + cy, r);
+        gradNode.each((child) => {
+            col = color(child.attrs.get('stop-color'));
+            if (opacity || opacity === 0) col.opacity = opacity;
+            gradient.addColorStop(
+                getSize(child.attrs.get('offset')),
+                '' + col
+            );
+        });
+        return gradient;
     }
 };
 
 
-export function strokeStyle (node) {
-    var ctx = node.context,
-        stroke = getColor(node, node.attrs.get('stroke'), node.getValue('stroke-opacity')),
-        width = getSize(node.attrs.get('stroke-width'));
-    if (width) ctx.lineWidth = node.factor * width;
-    if (stroke) ctx.strokeStyle = stroke;
-    return width === 0 ? false : true;
-}
-
-
-export function fillStyle (node) {
-    var ctx = node.context,
-        fill = getColor(node, node.attrs.get('fill'), node.getValue('fill-opacity'));
-    if (fill) ctx.fillStyle = fill;
-    return fill;
-}
-
-
-function getColor(node, value, opacity) {
+export function getColor(node, value, opacity) {
     if (value && value !== 'none') {
         if (typeof(value) === 'string' && value.substring(0, 4) === 'url(') {
-            var selector = value.substring(4, value.length-1);
-            node = selectCanvas(node.rootNode).select(selector).node();
-            return node ? gradient(node, opacity) : null;
+            var selector = value.substring(4, value.length-1),
+                gradNode = selectCanvas(node.rootNode).select(selector).node();
+            return gradNode ? gradient(node, gradNode, opacity) : null;
         }
-        var col = color(value);
-        if (col) {
-            if (opacity || opacity===0)
+        if (opacity || opacity===0) {
+            var col = color(value);
+            if (col) {
                 col.opacity = opacity;
-            return '' + col;
-        }
+                return '' + col;
+            }
+        } else return value;
     }
 }
 
@@ -85,7 +86,7 @@ StyleNode.prototype = {
 };
 
 
-function gradient(node, opacity) {
-    var g = gradients[node.tagName];
-    if (g) return g(node, opacity);
+function gradient(node, gradNode, opacity) {
+    var g = gradients[gradNode.tagName];
+    if (g) return g(node, gradNode, opacity);
 }

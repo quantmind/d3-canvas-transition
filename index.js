@@ -3,7 +3,7 @@ export {default as resolution} from './src/resolution';
 export {default as getSize} from './src/size';
 export {version as canvasVersion} from './package.json';
 
-import {tagDraws, attributes} from './src/draw';
+import {tagDraws} from './src/draw';
 
 import circle from './src/tags/circle';
 import line from './src/tags/line';
@@ -19,13 +19,3 @@ tagDraws.set('text', text);
 
 tagDraws.set('linearGradient', false);
 tagDraws.set('radialGradient', false);
-
-import opacity from './src/attrs/opacity';
-import transform from './src/attrs/transform';
-import linecap from './src/attrs/linecap';
-import linejoin from './src/attrs/linejoin';
-
-attributes.set('opacity', opacity);
-attributes.set('stroke-linecap', linecap);
-attributes.set('stroke-linejoin', linejoin);
-attributes.set('transform', transform);

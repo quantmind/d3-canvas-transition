@@ -1,5 +1,6 @@
 export function NodeIterator (node) {
     this.node = node;
+    this.context = node.context;
     this.current = node;
 }
 
