@@ -1,9 +1,12 @@
+var conv = Math.PI/180;
+
+
 export default function (node) {
     var x = +(node.attrs.get('x') || 0),
         y = +(node.attrs.get('y') || 0),
         trans = node.attrs.get('transform'),
         ctx = node.context,
-        sx, sy;
+        sx, sy, angle;
 
     if (typeof(trans) === 'string') {
         var index1 = trans.indexOf('translate('),
@@ -19,8 +22,7 @@ export default function (node) {
         index1 = trans.indexOf('rotate(');
         if (index1 > -1) {
             s = trans.substring(index1 + 7);
-            var angle = +s.substring(0, s.indexOf(')'));
-            if (angle === angle) ctx.rotate(angle*Math.PI/180);
+            angle = +s.substring(0, s.indexOf(')'));
         }
 
         index1 = trans.indexOf('scale(');
@@ -37,9 +39,10 @@ export default function (node) {
         y += trans.y;
         sx = trans.k;
     }
-    if (x || y) ctx.translate(node.factor * x, node.factor * y);
     if (sx) {
         sy = sy || sx;
         ctx.scale(sx, sy);
     }
+    if (x || y) ctx.translate(ctx._factor * x, ctx._factor * y);
+    if(angle && angle === angle) ctx.rotate(conv*angle);
 }

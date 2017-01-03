@@ -1,6 +1,7 @@
 export {default as selectCanvas} from './src/selection';
 export {default as resolution} from './src/resolution';
 export {default as getSize} from './src/size';
+export {default as canvasPolygon} from './src/polygon';
 export {version as canvasVersion} from './package.json';
 
 import {tagDraws} from './src/draw';

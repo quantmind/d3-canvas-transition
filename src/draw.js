@@ -17,7 +17,7 @@ export function touch (node, v) {
 }
 
 
-function draw (node, point) {
+export function draw (node, point) {
     var children = node.countNodes,
         drawer = tagDraws.get(node.tagName),
         factor = node.factor,
@@ -62,9 +62,10 @@ function draw (node, point) {
 }
 
 
-export function redraw (node, point) {
+export function redraw (node, point, force) {
 
     return function () {
+        if (!node._scheduled && !force) return;
         var ctx = node.context;
         node._touches = 0;
         ctx.beginPath();

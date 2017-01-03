@@ -25,7 +25,7 @@ export function canvasNodeListener (event) {
         y: root.factor*event.offsetY
     };
 
-    var nodes = redraw(root, event.canvasPoint)(),
+    var nodes = redraw(root, event.canvasPoint, true)(),
         handler = event.type === 'mousemove' ? mousemoveEvent : defaultEvent;
 
     handler(context, nodes, event);

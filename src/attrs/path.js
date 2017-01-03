@@ -1,31 +1,16 @@
-export default function (attr, factor) {
+export default function (p) {
 
-    var factor2 = factor*factor,
-        orginSize = attr.size();
-
-    function path () {
-        return canvasPath(attr, arguments);
+    function cp () {
+        return canvasPath(p, arguments);
     }
 
-    attr.size(size2);
-
-    path.size = function (_) {
-        if (arguments.length === 0) return size2;
-        orginSize = _;
-        return path;
-    };
-
-    return path;
-
-    function size2 (d) {
-        return factor2*orginSize(d);
-    }
+    return cp;
 }
 
 
-function canvasPath (attr, parameters) {
+function canvasPath (p, parameters) {
 
     return function () {
-        attr.apply(this, parameters);
+        p.apply(this, parameters);
     };
 }

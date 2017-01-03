@@ -1,5 +1,6 @@
 import {sizeTags} from '../size';
 
+var tau = 2 * Math.PI;
 
 export default function (node, stroke, fill, point) {
     var attrs = node.attrs,
@@ -7,10 +8,10 @@ export default function (node, stroke, fill, point) {
         f = node.factor;
     ctx.beginPath();
     ctx.arc(
-        f*attrs.get('cx', 0),
-        f*attrs.get('cy', 0),
-        f*attrs.get('r', 0),
-        0, 2 * Math.PI
+        f*(attrs['$cx'] || 0),
+        f*(attrs['$cy'] ||  0),
+        f*(attrs['$r'] || 0),
+        0, tau
     );
     ctx.closePath();
     if (stroke) ctx.stroke();
