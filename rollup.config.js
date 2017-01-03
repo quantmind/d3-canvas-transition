@@ -17,6 +17,7 @@ export default {
     dest: 'build/d3-canvas-transition.js',
     globals: {
         'd3-collection': 'd3',
+        'd3-color': 'd3',
         'd3-selection': 'd3',
         'd3-timer': 'd3'
     }

@@ -1,5 +1,5 @@
 {
-    "version": "0.3.2",
+    "version": "0.3.3",
     "name": "d3-canvas-transition",
     "title": "d3-canvas-transition",
     "description": "Animated transitions for D3 selections on svg and canvas",
@@ -26,6 +26,7 @@
     "module": "index",
     "dependencies": {
         "d3-collection": "1.0",
+        "d3-color": "1.0",
         "d3-selection": "1.0",
         "d3-timer": "1.0"
     },
@@ -36,7 +37,6 @@
         "babel-preset-es2015-rollup": "3.0",
         "browserify": "13.1",
         "canvas": "1.6",
-        "d3-color": "1.0",
         "d3-dispatch": "1.0",
         "d3-ease": "1.0",
         "d3-interpolate": "1.1",

@@ -20,6 +20,7 @@ AMD, CommonJS, and vanilla environments are supported. In vanilla, a d3 global i
 Try [d3-canvas-transition](https://runkit.com/npm/d3-canvas-transition) in your browser.
 ```javascript
 <script src="https://d3js.org/d3-collection.v1.min.js"></script>
+<script src="https://d3js.org/d3-color.v1.min.js"></script>
 <script src="https://d3js.org/d3-selection.v1.min.js"></script>
 <script src="https://d3js.org/d3-timer.v1.min.js"></script>
 <script src="https://giottojs.org/latest/d3-canvas-transition.min.js"></script>

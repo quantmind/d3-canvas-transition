@@ -4,7 +4,6 @@ export function NodeIterator (node) {
     this.current = node;
 }
 
-
 NodeIterator.prototype = {
 
     next () {
