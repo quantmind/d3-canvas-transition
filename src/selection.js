@@ -47,7 +47,7 @@ function selectionAttr (name, value) {
             attr = value.pathObject;
             if (!attr) {
                 value.context(wrapContext(node.context, node.factor));
-                attr = path(value, node.factor);
+                attr = path(value);
                 value.pathObject = attr;
             }
             arguments[1] = attr;

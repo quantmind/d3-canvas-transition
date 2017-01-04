@@ -27,7 +27,7 @@ export function draw (node, point) {
         return;
     else if (node.attrs) {
         var ctx = node.context,
-            stroke, fill, width;
+            stroke, width;
 
         // save the current context
         ctx.save();
@@ -35,6 +35,7 @@ export function draw (node, point) {
         if (attrs['$opacity'] !== undefined) ctx.globalAlpha = +attrs['$opacity'];
         if (attrs['$stroke-linecap']) ctx.lineCap = attrs['$stroke-linecap'];
         if (attrs['$stroke-linejoin']) ctx.lineJoin = attrs['$stroke-linejoin'];
+        if (attrs['$mix-blend-mode']) ctx.globalCompositeOperation = attrs['$mix-blend-mode'];
         transform(node);
         //
         // Stroke
@@ -47,7 +48,7 @@ export function draw (node, point) {
         stroke = width === 0 ? false : true;
         //
         // Fill
-        fill = getColor(node, node.getValue('fill'), node.getValue('fill-opacity'));
+        var fill = getColor(node, node.getValue('fill'), node.getValue('fill-opacity'));
         if (fill) ctx.fillStyle = fill;
         fill === 'none' || !fill ? false : true;
         //
