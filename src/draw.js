@@ -39,13 +39,18 @@ export function draw (node, point) {
         transform(node);
         //
         // Stroke
-        stroke = getColor(node, node.getValue('stroke'), node.getValue('stroke-opacity'));
-        if (stroke) ctx.strokeStyle = stroke;
-        if (attrs['$stroke-width'] !== undefined) {
-            width = getSize(node.attrs['$stroke-width']);
-            if (width) ctx.lineWidth = factor * width;
+        stroke = node.getValue('stroke');
+        if (stroke === 'none')
+            stroke = false;
+        else {
+            stroke = getColor(node, node.getValue('stroke'), node.getValue('stroke-opacity'));
+            if (stroke) ctx.strokeStyle = stroke;
+            if (attrs['$stroke-width'] !== undefined) {
+                width = getSize(node.attrs['$stroke-width']);
+                if (width) ctx.lineWidth = factor * width;
+            }
+            stroke = width === 0 ? false : true;
         }
-        stroke = width === 0 ? false : true;
         //
         // Fill
         var fill = getColor(node, node.getValue('fill'), node.getValue('fill-opacity'));

@@ -46,10 +46,11 @@ function selectionAttr (name, value) {
         if (isCanvas(node) && typeof(value.context) === 'function') {
             attr = value.pathObject;
             if (!attr) {
-                value.context(wrapContext(node.context, node.factor));
                 attr = path(value);
                 value.pathObject = attr;
             }
+            if (!value.context())
+                value.context(wrapContext(node.context, node.factor));
             arguments[1] = attr;
         }
     }
@@ -156,5 +157,11 @@ Context.prototype = {
     },
     quadraticCurveTo (cpx, cpy, x, y) {
         this._context.quadraticCurveTo(this._f*cpx, this._f*cpy, this._f*x, this._f*y);
+    },
+    bezierCurveTo (cp1x,cp1y,cp2x,cp2y,x,y) {
+        this._context.bezierCurveTo(
+            this._f*cp1x, this._f*cp1y,
+            this._f*cp2x, this._f*cp2y, this._f*x, this._f*y
+        );
     }
 };

@@ -52,7 +52,8 @@ const gradients = {
 
 
 export function getColor(node, value, opacity) {
-    if (value && value !== 'none') {
+    if (value === 'none') return false;
+    if (value) {
         if (typeof(value) === 'string' && value.substring(0, 4) === 'url(') {
             var selector = value.substring(4, value.length-1),
                 gradNode = selectCanvas(node.rootNode).select(selector).node();
