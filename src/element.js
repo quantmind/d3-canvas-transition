@@ -9,6 +9,7 @@ import {canvasListener, canvasNodeListener, mouseEvents} from './events';
 
 
 var namespace = 'canvas';
+var canvasStyles = ['cursor'];
 
 /**
  * A proxy for a data entry on canvas
@@ -252,7 +253,10 @@ CanvasElement.prototype = {
     },
 
     setProperty(name, value) {
-        this.setAttribute(name, value);
+        if (canvasStyles.indexOf(name) > -1)
+            this.context.canvas.style[name] = value;
+        else
+            this.setAttribute(name, value);
     },
 
     getProperty(name) {

@@ -57,9 +57,6 @@ export function draw (node, point) {
         if (fill) ctx.fillStyle = fill;
         fill === 'none' || !fill ? false : true;
         //
-        // Cursor
-        ctx.canvas.style.cursor = node.getValue('cursor') || 'default';
-        //
         if (drawer) drawer(node, stroke, fill, point);
         if (children) node.each((child) => draw(child, point));
         //
