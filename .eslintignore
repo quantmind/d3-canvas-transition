@@ -1,0 +1,8 @@
+node_modules
+static
+.github
+Makefile
+*.json
+*.lock
+*.log
+webpack.config.ts
