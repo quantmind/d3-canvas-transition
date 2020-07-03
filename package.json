@@ -45,11 +45,6 @@
     "d3-timer": "1.0.10"
   },
   "devDependencies": {
-    "babel-preset-es2015": "6.24",
-    "babel-preset-es2015-rollup": "3.0",
-    "babel-tape-runner": "3.0.0",
-    "babelify": "10.0.0",
-    "browserify": "16.5.1",
     "canvas": "2.6.1",
     "d3-axis": "1.0.12",
     "d3-dispatch": "1.0.6",
@@ -59,34 +54,23 @@
     "d3-shape": "1.3.7",
     "d3-transition": "1.3.2",
     "eslint": "^7.4.0",
-    "eslint-plugin-markdown": "^1.0.2",
     "eslint-plugin-prettier": "^3.1.4",
     "faucet": "0.0",
     "husky": "^4.2.5",
+    "jest": "^26.1.0",
     "jsdom": "16.2.2",
     "lint-staged": "^10.2.11",
-    "package-preamble": "0.1",
     "prettier": "^2.0.5",
     "publish": "0.6",
     "rollup": "2.18.2",
-    "rollup-plugin-babel": "4.4.0",
-    "rollup-plugin-json": "4.0.0",
-    "rollup-plugin-sourcemaps": "0.6.2",
-    "tape": "5.0.1",
-    "uglify-js": "3.10.0"
+    "rollup-plugin-sourcemaps": "0.6.2"
   },
   "scripts": {
     "lint": "eslint './src/*' './test/*'",
     "fix": "eslint './src/*' './test/*' --fix",
-    "unit": "babel-tape-runner `find test -name '*-test.js'` | faucet",
-    "test": "npm run-script lint && npm run-script unit",
+    "test": "jest",
     "rollup": "rollup -c",
     "build": "export NODE_ENV=production && npm run-script rollup",
     "release": "publish"
-  },
-  "babel": {
-    "presets": [
-      "es2015"
-    ]
   }
 }

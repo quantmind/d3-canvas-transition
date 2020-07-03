@@ -23,11 +23,5 @@ module.exports = {
     "eol-last": ERROR,
     semi: ERROR,
     complexity: [ERROR, { max: 18 }],
-    "no-restricted-imports": [
-      "error",
-      {
-        patterns: ["@material-ui/*/*/*", "!@material-ui/core/test-utils/*"],
-      },
-    ],
   },
 };

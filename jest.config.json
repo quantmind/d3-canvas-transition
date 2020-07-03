@@ -1,0 +1,16 @@
+{
+  "rootDir": ".",
+  "automock": false,
+  "testEnvironment": "jsdom",
+  "testMatch": ["<rootDir>/test/*-test.js"],
+  "coverageReporters": ["json", "html", "lcov", "text", "text-summary"],
+  "coveragePathIgnorePatterns": ["node_modules", "dist"],
+  "coverageThreshold": {
+    "global": {
+      "branches": 10,
+      "functions": 10,
+      "lines": 10,
+      "statements": 10
+    }
+  }
+}
